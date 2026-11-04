@@ -1,0 +1,19 @@
+{
+	"name": "Statistics",
+	"items": [
+		{"id": 1, "label": "Strength"},
+		{"id": 2, "label": "Dexterity"},
+		{"id": 3, "label": "Quality (Strength + Dexterity)"},
+		{"id": 4, "label": "Intelligence"},
+		{"id": 5, "label": "Faith"},
+		{"id": 6, "label": "Arcane"},
+		{"id": 7, "label": "Intelligence + Dexterity"},
+		{"id": 8, "label": "Intelligence + Strength"},
+		{"id": 9, "label": "Faith + Dexterity"},
+		{"id": 10, "label": "Faith + Strength"},
+		{"id": 11, "label": "Arcance + Dexterity"},
+		{"id": 12, "label": "Arcane + Strength"},
+		{"id": 13, "label": "Arcane + Faith"},
+		{"id": 14, "label": "Arcane + Intelligence"},
+	]
+}

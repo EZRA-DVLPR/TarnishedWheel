@@ -1,0 +1,23 @@
+{
+	"name": "Concepts",
+	"items": [
+		{"id": 1, "label": "Power Stanced Weapon Class"},
+		{"id": 2, "label": "Parry/Riposte Only"},
+		{"id": 3, "label": "Jump Attack Only"},
+		{"id": 4, "label": "Guard Counter Only"},
+		{"id": 5, "label": "Consumables Only"},
+		{"id": 6, "label": "Tools Only"},
+		{"id": 7, "label": "Summons Only"},
+		{"id": 8, "label": "Heavy Load"},
+		{"id": 9, "label": "Overloaded"},
+		{"id": 10, "label": "Daedicar's Woe must be equipped"},
+		{"id": 11, "label": "Shabriri's Woe must be equipped"},
+		{"id": 12, "label": "No Summons"},
+		{"id": 13, "label": "No Hit"},
+		{"id": 14, "label": "No Talismans"},
+		{"id": 15, "label": "No Rolling"},
+		{"id": 16, "label": "No Blocking"},
+		{"id": 17, "label": "Ashes of War Skills Only"},
+		{"id": 18, "label": "Lightning Ram Only"},
+	]
+}
