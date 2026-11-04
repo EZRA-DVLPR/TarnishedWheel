@@ -4,21 +4,24 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "./assets/vite.svg";
 import "./App.css";
 
-import { SpinWheel } from 'spin-wheel-game'
+import { SpinWheel } from "spin-wheel-game";
 
 function App() {
 	const [count, setCount] = useState(0);
 	const segments1 = [
-		{ segmentText: 'Option 1', segColor: 'red'},
-		{ segmentText: 'Option 2', segColor: 'blue'},
-		{ segmentText: 'Option 3', segColor: 'green'},
-	]
+		{ segmentText: "Option 1", segColor: "red" },
+		{ segmentText: "Option 2", segColor: "blue" },
+		{ segmentText: "Option 3", segColor: "green" },
+	];
 
 	const segments2 = [
-		{ segmentText: 'Option 4', segColor: 'red'},
-		{ segmentText: 'Option 5', segColor: 'blue'},
-		{ segmentText: 'Option 6', segColor: 'green'},
-	]
+		{ segmentText: "Option 4", segColor: "red" },
+		{ segmentText: "Option 5", segColor: "blue" },
+		{ segmentText: "Option 6", segColor: "green" },
+	];
+
+	//recall from local storage
+	const [valDLC, setDLC] = useState(true);
 
 	return (
 		<>
@@ -49,22 +52,35 @@ function App() {
 					Reset Count
 				</button>
 
+				<div>
+					<input
+						type="checkbox"
+						id="dlc-toggle"
+						checked={valDLC}
+						onChange={(e) => setDLC(e.target.checked)}
+					/>
+					<label htmlFor="dlc-toggle">
+						Include the DLC - Shadow of the Erdtree
+					</label>
+				</div>
+
+				<p>DLC Value {String(valDLC)}</p>
+
 				<SpinWheel
 					segments={segments1}
 					onFinished={(result) => console.log(`Spun to: ${result}`)}
-					arrowLocation={'top'}
+					arrowLocation={"top"}
 					upDuration={300}
 					downDuration={600}
-					/>
+				/>
 
 				<SpinWheel
 					segments={segments2}
 					onFinished={(result) => console.log(`Spun to: ${result}`)}
-					arrowLocation={'top'}
+					arrowLocation={"top"}
 					upDuration={300}
 					downDuration={600}
-					/>
-
+				/>
 			</section>
 
 			<div className="ticks" />
