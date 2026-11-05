@@ -4,30 +4,52 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "./assets/vite.svg";
 import "./App.css";
 
+//import the json data
 import StatData from "./data/StatBuilds.json";
-console.log(StatData);
-console.log(StatData.items);
+import WeaponData from "./data/WeaponBuilds.json";
 
-// obtains the list of labels
-StatData.items.forEach((item, index) => {
-	console.log(item.label);
-});
-
+//TODO: make the wheel myself. it fuckin lags??? are we serioous??? in the big 26???
+//methinks an SVG that just gets rotated, similar to the obsidian plugin.
 import { SpinWheel } from "spin-wheel-game";
+
+//list of the first 8 ANSI colors see: 
+//https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
+const colors = [
+	"#800000",
+	"#008000",
+	"#808000",
+	"#000080",
+	"#800080",
+	"#008080",
+	"#C0C0C0"
+]
+
+type Segment = {
+	segText: string;
+	segColor: string;
+}
+
+let statWheel: Segment[] = [];
+let weaponWheel: Segment[] = [];
+
+//using the data from the json, insert into a segs
+//utilizing the index as the value of the color
+StatData.items.forEach((item, index) => {
+	statWheel.push({
+		segmentText: item.label,
+		segColor: colors[index % 7],
+	})
+})
+
+WeaponData.items.forEach((item, index) => {
+	weaponWheel.push({
+		segmentText: item.label,
+		segColor: colors[index % 7],
+	})
+})
 
 function App() {
 	const [count, setCount] = useState(0);
-	const segments1 = [
-		{ segmentText: "Option 1", segColor: "red" },
-		{ segmentText: "Option 2", segColor: "blue" },
-		{ segmentText: "Option 3", segColor: "green" },
-	];
-
-	const segments2 = [
-		{ segmentText: "Option 4", segColor: "red" },
-		{ segmentText: "Option 5", segColor: "blue" },
-		{ segmentText: "Option 6", segColor: "green" },
-	];
 
 	//TODO: recall from local storage
 	const [valDLC, setDLC] = useState(true);
@@ -76,19 +98,15 @@ function App() {
 				<p>DLC Value {String(valDLC)}</p>
 
 				<SpinWheel
-					segments={segments1}
+					segments={statWheel}
 					onFinished={(result) => console.log(`Spun to: ${result}`)}
 					arrowLocation={"top"}
-					upDuration={300}
-					downDuration={600}
 				/>
 
 				<SpinWheel
-					segments={segments2}
+					segments={weaponWheel}
 					onFinished={(result) => console.log(`Spun to: ${result}`)}
 					arrowLocation={"top"}
-					upDuration={300}
-					downDuration={600}
 				/>
 			</section>
 
