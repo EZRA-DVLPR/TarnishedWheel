@@ -4,6 +4,15 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "./assets/vite.svg";
 import "./App.css";
 
+import StatData from "./data/StatBuilds.json";
+console.log(StatData);
+console.log(StatData.items);
+
+// obtains the list of labels
+StatData.items.forEach((item, index) => {
+	console.log(item.label);
+});
+
 import { SpinWheel } from "spin-wheel-game";
 
 function App() {
@@ -20,7 +29,7 @@ function App() {
 		{ segmentText: "Option 6", segColor: "green" },
 	];
 
-	//recall from local storage
+	//TODO: recall from local storage
 	const [valDLC, setDLC] = useState(true);
 
 	return (
