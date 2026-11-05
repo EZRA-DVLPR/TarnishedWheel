@@ -2,197 +2,158 @@
 	"name": "Weapon Classes",
 	"items": [
 		{
-			"id": 1,
 			"label": "Daggers",
 			"DLC": "False"
 		},
 		{
-			"id": 2,
 			"label": "Straight Swords",
 			"DLC": "False"
 		},
 		{
-			"id": 3,
 			"label": "Greatswords",
 			"DLC": "False"
 		},
 		{
-			"id": 4,
 			"label": "Colossal Swords",
 			"DLC": "False"
 		},
 		{
-			"id": 5,
 			"label": "Thrusting Swords",
 			"DLC": "False"
 		},
 		{
-			"id": 6,
 			"label": "Heavy Thrusting Swords",
 			"DLC": "False"
 		},
 		{
-			"id": 7,
 			"label": "Curved Swords",
 			"DLC": "False"
 		},
 		{
-			"id": 8,
 			"label": "Curved Greatswords",
 			"DLC": "False"
 		},
 		{
-			"id": 9,
 			"label": "Katanas",
 			"DLC": "False"
 		},
 		{
-			"id": 10,
 			"label": "Twinblades",
 			"DLC": "False"
 		},
 		{
-			"id": 11,
 			"label": "Axes",
 			"DLC": "False"
 		},
 		{
-			"id": 12,
 			"label": "Greataxes",
 			"DLC": "False"
 		},
 		{
-			"id": 13,
 			"label": "Hammers",
 			"DLC": "False"
 		},
 		{
-			"id": 14,
 			"label": "Flails",
 			"DLC": "False"
 		},
 		{
-			"id": 15,
 			"label": "Great Hammers",
 			"DLC": "False"
 		},
 		{
-			"id": 16,
 			"label": "Colossal Weapons",
 			"DLC": "False"
 		},
 		{
-			"id": 17,
 			"label": "Spears",
 			"DLC": "False"
 		},
 		{
-			"id": 18,
 			"label": "Great Spears",
 			"DLC": "False"
 		},
 		{
-			"id": 19,
 			"label": "Halberds",
 			"DLC": "False"
 		},
 		{
-			"id": 20,
 			"label": "Reapers",
 			"DLC": "False"
 		},
 		{
-			"id": 21,
 			"label": "Whips",
 			"DLC": "False"
 		},
 		{
-			"id": 22,
 			"label": "Fists",
 			"DLC": "False"
 		},
 		{
-			"id": 23,
 			"label": "Claws",
 			"DLC": "False"
 		},
 		{
-			"id": 24,
 			"label": "Light Bows",
 			"DLC": "False"
 		},
 		{
-			"id": 25,
 			"label": "Bows",
 			"DLC": "False"
 		},
 		{
-			"id": 26,
 			"label": "Greatbows",
 			"DLC": "False"
 		},
 		{
-			"id": 27,
 			"label": "Crossbows",
 			"DLC": "False"
 		},
 		{
-			"id": 28,
 			"label": "Ballistas",
 			"DLC": "False"
 		},
 		{
-			"id": 29,
 			"label": "Glintstone Staffs",
 			"DLC": "False"
 		},
 		{
-			"id": 30,
 			"label": "Sacred Seals",
 			"DLC": "False"
 		},
 		{
-			"id": 31,
 			"label": "Torches",
 			"DLC": "False"
 		},
 		{
-			"id": 32,
 			"label": "Thrusting Shields",
 			"DLC": "True"
 		},
 		{
-			"id": 33,
 			"label": "Hand-to-Hand Arts",
 			"DLC": "True"
 		},
 		{
-			"id": 34,
 			"label": "Throwing Blades",
 			"DLC": "True"
 		},
 		{
-			"id": 35,
 			"label": "Backhand Blades",
 			"DLC": "True"
 		},
 		{
-			"id": 36,
 			"label": "Perfume Bottles",
 			"DLC": "True"
 		},
 		{
-			"id": 37,
 			"label": "Beast Claws",
 			"DLC": "True"
 		},
 		{
-			"id": 38,
 			"label": "Light Greatswords",
 			"DLC": "True"
 		},
 		{
-			"id": 39,
 			"label": "Great Katanas",
 			"DLC": "True"
 		}
