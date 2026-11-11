@@ -12,7 +12,7 @@ import WeaponData from "./data/WeaponBuilds.json";
 //methinks an SVG that just gets rotated, similar to the obsidian plugin.
 import { SpinWheel } from "spin-wheel-game";
 
-//list of the first 8 ANSI colors see: 
+//list of the first 8 ANSI colors see:
 //https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
 const colors = [
 	"#800000",
@@ -21,16 +21,64 @@ const colors = [
 	"#000080",
 	"#800080",
 	"#008080",
-	"#C0C0C0"
-]
+	"#C0C0C0",
+];
 
 type Segment = {
-	segText: string;
+	segmentText: string;
 	segColor: string;
+};
+
+let modWheel: Segment[] = [];
+
+function SegmentList({ segments }: { segments: Segment[] }) {
+	const [checked, setChecked] = useState<Record<string, boolean>>(() =>
+		Object.fromEntries(segments.map((s) => [s.segmentText, true])),
+	);
+
+	const toggle = (name: string) => {
+		setChecked((prev) => ({ ...prev, [name]: !prev[name] }));
+	};
+	//BUG: when toggling, it doesn't update the color to be displayed with the slice
+	//this color choice should be recreated upon toggle
+
+	modWheel = segments.filter((s) => checked[s.segmentText]);
+
+	const selected = segments
+		.map((s) => s.segmentText)
+		.filter((name) => checked[name]);
+
+	return (
+		<>
+			<SpinWheel
+				segments={modWheel}
+				onFinished={(result) => console.log(`Spun to: ${result}`)}
+				arrowLocation={"top"}
+			/>
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "flex-start",
+				}}
+			>
+				{segments.map((s) => (
+					<label key={s.segmentText}>
+						<input
+							type="checkbox"
+							checked={!!checked[s.segmentText]}
+							onChange={() => toggle(s.segmentText)}
+						/>
+						{s.segmentText}
+					</label>
+				))}
+			</div>
+		</>
+	);
 }
 
-let statWheel: Segment[] = [];
-let weaponWheel: Segment[] = [];
+const statWheel: Segment[] = [];
+const weaponWheel: Segment[] = [];
 
 //using the data from the json, insert into a segs
 //utilizing the index as the value of the color
@@ -38,51 +86,23 @@ StatData.items.forEach((item, index) => {
 	statWheel.push({
 		segmentText: item.label,
 		segColor: colors[index % 7],
-	})
-})
+	});
+});
 
 WeaponData.items.forEach((item, index) => {
 	weaponWheel.push({
 		segmentText: item.label,
 		segColor: colors[index % 7],
-	})
-})
+	});
+});
 
 function App() {
-	const [count, setCount] = useState(0);
-
 	//TODO: recall from local storage
 	const [valDLC, setDLC] = useState(true);
 
 	return (
 		<>
 			<section id="center">
-				<div className="hero">
-					<img src={heroImg} className="base" width="170" height="179" alt="" />
-					<img src={reactLogo} className="framework" alt="React logo" />
-					<img src={viteLogo} className="vite" alt="Vite logo" />
-				</div>
-				<div>
-					<h1>Get started</h1>
-					<p>
-						Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-					</p>
-				</div>
-				<button
-					type="button"
-					className="counter"
-					onClick={() => setCount((count) => count + 1)}
-				>
-					Count is {count}
-				</button>
-				<button
-					type="button"
-					className="reset"
-					onClick={() => setCount((count) => 0)}
-				>
-					Reset Count
-				</button>
-
 				<div>
 					<input
 						type="checkbox"
@@ -97,17 +117,9 @@ function App() {
 
 				<p>DLC Value {String(valDLC)}</p>
 
-				<SpinWheel
-					segments={statWheel}
-					onFinished={(result) => console.log(`Spun to: ${result}`)}
-					arrowLocation={"top"}
-				/>
+				<SegmentList segments={statWheel} />
 
-				<SpinWheel
-					segments={weaponWheel}
-					onFinished={(result) => console.log(`Spun to: ${result}`)}
-					arrowLocation={"top"}
-				/>
+				<SegmentList segments={weaponWheel} />
 			</section>
 
 			<div className="ticks" />
@@ -138,7 +150,7 @@ function App() {
 					<svg className="icon" role="presentation" aria-hidden="true">
 						<use href="/icons.svg#social-icon"></use>
 					</svg>
-					<h2>Connect with us</h2>
+					<h2>Stay Connected</h2>
 					<p>Join the Vite community</p>
 					<ul>
 						<li>
@@ -193,8 +205,7 @@ function App() {
 				</div>
 			</section>
 
-			<div className="ticks"></div>
-			<section id="spacer"></section>
+			<section id="spacer" />
 		</>
 	);
 }
