@@ -34,6 +34,7 @@ type Segment = {
 	segColor: string;
 };
 
+// modWheel is the wheel that gets displayed
 let modWheel: Segment[] = [];
 
 //displays the wheel and checkbox based on the given wheel data
@@ -43,7 +44,7 @@ function SegmentList({ segments }: { segments: Segment[] }) {
 		Object.fromEntries(segments.map((s) => [s.segmentText, true])),
 	);
 
-	// flips boolean
+	// flips bool for the given named segmentText
 	const toggle = (name: string) => {
 		setChecked((prev) => ({ ...prev, [name]: !prev[name] }));
 	};
@@ -64,9 +65,8 @@ function SegmentList({ segments }: { segments: Segment[] }) {
 	modWheel = segments.filter((s) => checked[s.segmentText]);
 
 	// display the wheel
-	// then the checkbox below it
-
-	//TODO: add to localstorage
+	// the buttons to (de)select all
+	// then the checkbox below
 	return (
 		<>
 			<SpinWheel
@@ -98,29 +98,7 @@ function SegmentList({ segments }: { segments: Segment[] }) {
 	);
 }
 
-//declare all wheels based on json stuff
-const statWheel: Segment[] = [];
-const conceptWheel: Segment[] = [];
-const themeWheel: Segment[] = [];
-const weaponWheel: Segment[] = [];
-
-//fills the given wheel with the given json data
-function fillWheel(wheel, data) {
-	data.items.forEach((item, index) => {
-		wheel.push({
-			segmentText: item.label,
-			segColor: colors[index % 7],
-		});
-	});
-}
-
-//fill the wheels with the corresponding data
-fillWheel(statWheel, StatData);
-fillWheel(conceptWheel, ConceptData);
-fillWheel(themeWheel, ThemeData);
-fillWheel(weaponWheel, WeaponData);
-
-// localstorage handling
+// localstorage handling of [value, setValue] paired React State Hooks 
 const useLocalStorage = (storageKey, fallbackState) => {
 	//creation of value and setting of value with localstorage
 	const [value, setValue] = useState(
@@ -137,6 +115,30 @@ const useLocalStorage = (storageKey, fallbackState) => {
 
 function App() {
 	const [valDLC, setDLC] = useLocalStorage("valDLC", true);
+
+	//declare all wheels based on json stuff
+	const statWheel: Segment[] = [];
+	const conceptWheel: Segment[] = [];
+	const themeWheel: Segment[] = [];
+	const weaponWheel: Segment[] = [];
+
+	//fills the given wheel with the given json data
+	function fillWheel(wheel, data) {
+		data.items.forEach((item, index) => {
+			if ((item.DLC == null) || (item.DLC == "False") || (item.DLC == "True" && valDLC)) {
+				wheel.push({
+					segmentText: item.label,
+					segColor: colors[index % 7],
+				});
+			}
+		});
+	}
+
+	// fill the wheels with the corresponding data
+	fillWheel(statWheel, StatData);
+	fillWheel(conceptWheel, ConceptData);
+	fillWheel(themeWheel, ThemeData);
+	fillWheel(weaponWheel, WeaponData);
 
 	return (
 		<>
