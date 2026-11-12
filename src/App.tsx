@@ -1,6 +1,6 @@
 //INFO:keeping just in case i want to import images for later
 //import heroImg from "./assets/hero.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 //import the json data
@@ -110,14 +110,30 @@ fillWheel(conceptWheel, ConceptData);
 fillWheel(themeWheel, ThemeData);
 fillWheel(weaponWheel, WeaponData);
 
+// localstorage handling
+const useLocalStorage = (storageKey, fallbackState) => {
+	//creation of value and setting of value with localstorage
+	const [value, setValue] = useState(
+		JSON.parse(localStorage.getItem(storageKey)) ?? fallbackState,
+	);
+
+	//store as JSON-ified string as a pair
+	useEffect(() => {
+		localStorage.setItem(storageKey, JSON.stringify(value));
+	}, [value, storageKey]);
+
+	return [value, setValue];
+};
+
 function App() {
-	//TODO: recall from local storage
-	const [valDLC, setDLC] = useState(true);
+	const [valDLC, setDLC] = useLocalStorage("valDLC", true);
 
 	return (
 		<>
 			<section id="spacer" />
+
 			<Header />
+
 			<section id="center">
 				<div>
 					<input
