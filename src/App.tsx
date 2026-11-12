@@ -1,14 +1,24 @@
 import { useState } from "react";
-import heroImg from "./assets/hero.png";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "./assets/vite.svg";
+//import heroImg from "./assets/hero.png";
 import "./App.css";
+
+//icons
+import { FaQuestionCircle, FaComment } from "react-icons/fa";
+import {
+	FaGithub,
+	FaYoutube,
+	FaXTwitter,
+	FaDiscord,
+	FaBug,
+} from "react-icons/fa6";
+import { LuNotebookPen, LuMail } from "react-icons/lu";
+import { BsPersonWorkspace } from "react-icons/bs";
 
 //import the json data
 import StatData from "./data/StatBuilds.json";
 import WeaponData from "./data/WeaponBuilds.json";
 
-//TODO: make the wheel myself. it fuckin lags??? are we serioous??? in the big 26???
+//TODO: make the wheel myself. it fuckin lags??? are we serious??? in the big 26???
 //methinks an SVG that just gets rotated, similar to the obsidian plugin.
 import { SpinWheel } from "spin-wheel-game";
 
@@ -126,85 +136,86 @@ function App() {
 
 			<section id="next-steps">
 				<div id="docs">
-					<svg className="icon" role="presentation" aria-hidden="true">
-						<use href="/icons.svg#documentation-icon" />
-					</svg>
-					<h2>Documentation</h2>
-					<p>Your questions, answered</p>
+					<FaBug />
+					&nbsp; &nbsp;
+					<FaQuestionCircle />
+					&nbsp; &nbsp;
+					<FaComment />
+					<h2>Bugs / Questions / Comments?</h2>
+					<p>Message me here</p>
 					<ul>
 						<li>
-							<a href="https://vite.dev/" target="_bank">
-								<img className="logo" src={viteLogo} alt="" />
-								Explore Vite
+							<a
+								href="mailto:EZRA-DVLPR@protonmail.com?subject=Tarnished%20Wheel%20-%20"
+								target="_blank"
+								rel="noreferrer"
+							>
+								<LuMail />
+								EZRA-DVLPR [at] protonmail.com
 							</a>
 						</li>
 						<li>
-							<a href="https://react.dev/" target="_blank">
-								<img className="button-icon" src={reactLogo} alt="" />
-								Learn more
+							{/*TODO: Fix the link */}
+							<a
+								href="https://ezra-dvlpr.com/blog"
+								target="_blank"
+								rel="noreferrer"
+							>
+								<FaDiscord />
+								Discord
 							</a>
 						</li>
 					</ul>
 				</div>
 				<div id="social">
-					<svg className="icon" role="presentation" aria-hidden="true">
-						<use href="/icons.svg#social-icon"></use>
-					</svg>
+					<BsPersonWorkspace />
 					<h2>Stay Connected</h2>
-					<p>Join the Vite community</p>
+					<p>Stay up to date with my projects</p>
 					<ul>
 						<li>
-							<a href="https://github.com/vitejs/vite" target="_blank">
-								<svg
-									className="button-icon"
-									role="presentation"
-									aria-hidden="true"
-								>
-									<use href="/icons.svg#github-icon"></use>
-								</svg>
+							<a
+								href="https://github.com/EZRA-DVLPR"
+								target="_blank"
+								rel="noreferrer"
+							>
+								<FaGithub />
 								GitHub
 							</a>
 						</li>
 						<li>
-							<a href="https://chat.vite.dev/" target="_blank">
-								<svg
-									className="button-icon"
-									role="presentation"
-									aria-hidden="true"
-								>
-									<use href="/icons.svg#discord-icon"></use>
-								</svg>
+							{/*TODO: Fix the link */}
+							<a
+								href="https://ezra-dvlpr.com/blog"
+								target="_blank"
+								rel="noreferrer"
+							>
+								<FaDiscord />
 								Discord
 							</a>
 						</li>
 						<li>
-							<a href="https://x.com/vite_js" target="_blank">
-								<svg
-									className="button-icon"
-									role="presentation"
-									aria-hidden="true"
-								>
-									<use href="/icons.svg#x-icon"></use>
-								</svg>
-								X.com
+							<a
+								href="https://x.com/IsaiahMTech"
+								target="_blank"
+								rel="noreferrer"
+							>
+								<LuNotebookPen />
+								Blog
 							</a>
 						</li>
 						<li>
-							<a href="https://bsky.app/profile/vite.dev" target="_blank">
-								<svg
-									className="button-icon"
-									role="presentation"
-									aria-hidden="true"
-								>
-									<use href="/icons.svg#bluesky-icon"></use>
-								</svg>
-								Bluesky
+							<a
+								href="https://www.youtube.com/@EZRA-DVLPR"
+								target="_blank"
+								rel="noreferrer"
+							>
+								<FaYoutube />
+								YouTube
 							</a>
 						</li>
 					</ul>
 				</div>
 			</section>
-
 			<section id="spacer" />
 		</>
 	);
