@@ -58,7 +58,6 @@ function SegmentList({ segments }: { segments: Segment[] }) {
 
 	//TODO: add clear all
 	//TODO: add add all
-	//TODO: organize the lists into a better format (2/4 cols based on amt of items?)
 	return (
 		<>
 			<SpinWheel
@@ -66,15 +65,9 @@ function SegmentList({ segments }: { segments: Segment[] }) {
 				onFinished={(result) => console.log(`Spun to: ${result}`)}
 				arrowLocation={"top"}
 			/>
-			<div
-				style={{
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "flex-start",
-				}}
-			>
+			<div id="wheelbox">
 				{segments.map((s) => (
-					<label key={s.segmentText}>
+					<label key={s.segmentText} id="wheelbox-item">
 						<input
 							type="checkbox"
 							checked={!!checked[s.segmentText]}

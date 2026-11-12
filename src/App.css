@@ -102,3 +102,30 @@
     height: 48px;
   }
 }
+
+#wheelbox {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	flex-wrap: wrap;
+	gap: 8px;
+	column-gap: 36px;
+	border-radius: 8px;
+	border-style: solid;
+	border-width: medium;
+	border-color: coral;
+	padding: 26px;
+	height: 300px;
+	@media (max-width: 1024px) {
+		gap: 8px;
+		column-gap: 36px;
+		border-radius: 8px;
+		padding: 20px;
+		height: 400px;
+	}
+}
+
+#wheelbox-item {
+	display: flex;
+	gap: 6px;
+}
