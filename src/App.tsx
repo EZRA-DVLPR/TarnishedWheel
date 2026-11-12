@@ -132,16 +132,14 @@ function App() {
 				<SegmentList segments={weaponWheel} />
 			</section>
 
-			<div className="ticks" />
-
-			<section id="next-steps">
-				<div id="docs">
+			<section id="footer">
+				<div id="contact">
 					<FaBug />
 					&nbsp; &nbsp;
 					<FaQuestionCircle />
 					&nbsp; &nbsp;
 					<FaComment />
-					<h2>Bugs / Questions / Comments?</h2>
+					<h2>Bugs / Questions / Comments</h2>
 					<p>Message me here</p>
 					<ul>
 						<li>
@@ -167,7 +165,7 @@ function App() {
 						</li>
 					</ul>
 				</div>
-				<div id="social">
+				<div>
 					<BsPersonWorkspace />
 					<h2>Stay Connected</h2>
 					<p>Stay up to date with my projects</p>
