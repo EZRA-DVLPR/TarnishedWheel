@@ -1,5 +1,6 @@
-import { useState } from "react";
+//INFO:keeping just in case i want to import images for later
 //import heroImg from "./assets/hero.png";
+import { useState } from "react";
 import "./App.css";
 
 //import the json data
@@ -16,7 +17,7 @@ import Footer from "./components/Footer.tsx";
 //methinks an SVG that just gets rotated, similar to the obsidian plugin.
 import { SpinWheel } from "spin-wheel-game";
 
-//list of the first 8 ANSI colors see:
+//INFO: list of the first 8 ANSI colors see:
 //https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
 const colors = [
 	"#800000",
@@ -35,6 +36,7 @@ type Segment = {
 
 let modWheel: Segment[] = [];
 
+//displays the wheel and checkbox based on the given wheel data
 function SegmentList({ segments }: { segments: Segment[] }) {
 	// holds record of state for the given segment[]
 	const [checked, setChecked] = useState<Record<string, boolean>>(() =>
@@ -86,40 +88,27 @@ function SegmentList({ segments }: { segments: Segment[] }) {
 	);
 }
 
+//declare all wheels based on json stuff
 const statWheel: Segment[] = [];
 const conceptWheel: Segment[] = [];
 const themeWheel: Segment[] = [];
 const weaponWheel: Segment[] = [];
 
-//using the data from the json, insert into a segs
-//utilizing the index as the value of the color
-StatData.items.forEach((item, index) => {
-	statWheel.push({
-		segmentText: item.label,
-		segColor: colors[index % 7],
+//fills the given wheel with the given json data
+function fillWheel(wheel, data) {
+	data.items.forEach((item, index) => {
+		wheel.push({
+			segmentText: item.label,
+			segColor: colors[index % 7],
+		});
 	});
-});
+}
 
-WeaponData.items.forEach((item, index) => {
-	weaponWheel.push({
-		segmentText: item.label,
-		segColor: colors[index % 7],
-	});
-});
-
-ConceptData.items.forEach((item, index) => {
-	conceptWheel.push({
-		segmentText: item.label,
-		segColor: colors[index % 7],
-	});
-});
-
-ThemeData.items.forEach((item, index) => {
-	themeWheel.push({
-		segmentText: item.label,
-		segColor: colors[index % 7],
-	});
-});
+//fill the wheels with the corresponding data
+fillWheel(statWheel, StatData);
+fillWheel(conceptWheel, ConceptData);
+fillWheel(themeWheel, ThemeData);
+fillWheel(weaponWheel, WeaponData);
 
 function App() {
 	//TODO: recall from local storage
@@ -152,6 +141,7 @@ function App() {
 			</section>
 
 			<Footer />
+
 			<section id="spacer" />
 		</>
 	);
