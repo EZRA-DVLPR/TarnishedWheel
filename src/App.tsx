@@ -2,21 +2,15 @@ import { useState } from "react";
 //import heroImg from "./assets/hero.png";
 import "./App.css";
 
-//icons
-import { FaQuestionCircle, FaComment } from "react-icons/fa";
-import {
-	FaGithub,
-	FaYoutube,
-	FaXTwitter,
-	FaDiscord,
-	FaBug,
-} from "react-icons/fa6";
-import { LuNotebookPen, LuMail } from "react-icons/lu";
-import { BsPersonWorkspace } from "react-icons/bs";
-
 //import the json data
 import StatData from "./data/StatBuilds.json";
 import WeaponData from "./data/WeaponBuilds.json";
+import ThemeData from "./data/ThemeBuilds.json";
+import ConceptData from "./data/ConceptBuilds.json";
+
+//import other components
+import Header from "./components/Header.tsx";
+import Footer from "./components/Footer.tsx";
 
 //TODO: make the wheel myself. it fuckin lags??? are we serious??? in the big 26???
 //methinks an SVG that just gets rotated, similar to the obsidian plugin.
@@ -42,22 +36,27 @@ type Segment = {
 let modWheel: Segment[] = [];
 
 function SegmentList({ segments }: { segments: Segment[] }) {
+	// holds record of state for the given segment[]
 	const [checked, setChecked] = useState<Record<string, boolean>>(() =>
 		Object.fromEntries(segments.map((s) => [s.segmentText, true])),
 	);
 
+	// flips boolean
 	const toggle = (name: string) => {
 		setChecked((prev) => ({ ...prev, [name]: !prev[name] }));
 	};
 	//BUG: when toggling, it doesn't update the color to be displayed with the slice
 	//this color choice should be recreated upon toggle
 
+	// update modWheel to match always those that are checked
 	modWheel = segments.filter((s) => checked[s.segmentText]);
 
-	const selected = segments
-		.map((s) => s.segmentText)
-		.filter((name) => checked[name]);
+	// display the wheel
+	// then the checkbox below it
 
+	//TODO: add clear all
+	//TODO: add add all
+	//TODO: organize the lists into a better format (2/4 cols based on amt of items?)
 	return (
 		<>
 			<SpinWheel
@@ -88,6 +87,8 @@ function SegmentList({ segments }: { segments: Segment[] }) {
 }
 
 const statWheel: Segment[] = [];
+const conceptWheel: Segment[] = [];
+const themeWheel: Segment[] = [];
 const weaponWheel: Segment[] = [];
 
 //using the data from the json, insert into a segs
@@ -106,12 +107,28 @@ WeaponData.items.forEach((item, index) => {
 	});
 });
 
+ConceptData.items.forEach((item, index) => {
+	conceptWheel.push({
+		segmentText: item.label,
+		segColor: colors[index % 7],
+	});
+});
+
+ThemeData.items.forEach((item, index) => {
+	themeWheel.push({
+		segmentText: item.label,
+		segColor: colors[index % 7],
+	});
+});
+
 function App() {
 	//TODO: recall from local storage
 	const [valDLC, setDLC] = useState(true);
 
 	return (
 		<>
+			<section id="spacer" />
+			<Header />
 			<section id="center">
 				<div>
 					<input
@@ -125,95 +142,16 @@ function App() {
 					</label>
 				</div>
 
-				<p>DLC Value {String(valDLC)}</p>
-
 				<SegmentList segments={statWheel} />
 
 				<SegmentList segments={weaponWheel} />
+
+				<SegmentList segments={themeWheel} />
+
+				<SegmentList segments={conceptWheel} />
 			</section>
 
-			<section id="footer">
-				<div id="contact">
-					<FaBug />
-					&nbsp; &nbsp;
-					<FaQuestionCircle />
-					&nbsp; &nbsp;
-					<FaComment />
-					<h2>Bugs / Questions / Comments</h2>
-					<p>Message me here</p>
-					<ul>
-						<li>
-							<a
-								href="mailto:EZRA-DVLPR@protonmail.com?subject=Tarnished%20Wheel%20-%20"
-								target="_blank"
-								rel="noreferrer"
-							>
-								<LuMail />
-								EZRA-DVLPR [at] protonmail.com
-							</a>
-						</li>
-						<li>
-							{/*TODO: Fix the link */}
-							<a
-								href="https://ezra-dvlpr.com/blog"
-								target="_blank"
-								rel="noreferrer"
-							>
-								<FaDiscord />
-								Discord
-							</a>
-						</li>
-					</ul>
-				</div>
-				<div>
-					<BsPersonWorkspace />
-					<h2>Stay Connected</h2>
-					<p>Stay up to date with my projects</p>
-					<ul>
-						<li>
-							<a
-								href="https://github.com/EZRA-DVLPR"
-								target="_blank"
-								rel="noreferrer"
-							>
-								<FaGithub />
-								GitHub
-							</a>
-						</li>
-						<li>
-							{/*TODO: Fix the link */}
-							<a
-								href="https://ezra-dvlpr.com/blog"
-								target="_blank"
-								rel="noreferrer"
-							>
-								<FaDiscord />
-								Discord
-							</a>
-						</li>
-						<li>
-							<a
-								href="https://x.com/IsaiahMTech"
-								target="_blank"
-								rel="noreferrer"
-							>
-								<LuNotebookPen />
-								Blog
-							</a>
-						</li>
-						<li>
-							<a
-								href="https://www.youtube.com/@EZRA-DVLPR"
-								target="_blank"
-								rel="noreferrer"
-							>
-								<FaYoutube />
-								YouTube
-							</a>
-						</li>
-					</ul>
-				</div>
-			</section>
+			<Footer />
 			<section id="spacer" />
 		</>
 	);
