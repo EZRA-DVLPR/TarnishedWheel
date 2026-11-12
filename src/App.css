@@ -129,3 +129,8 @@
 	display: flex;
 	gap: 6px;
 }
+
+#wheelbox-buttons {
+	display: flex;
+	gap: 6px;
+}

@@ -49,6 +49,16 @@ function SegmentList({ segments }: { segments: Segment[] }) {
 	};
 	//BUG: when toggling, it doesn't update the color to be displayed with the slice
 	//this color choice should be recreated upon toggle
+	
+	// toggles all true
+	const selectAll = () => {
+		setChecked(Object.fromEntries(segments.map((s) => [s.segmentText, true])))
+	}
+
+	// toggles all false
+	const selectNone = () => {
+		setChecked({})
+	}
 
 	// update modWheel to match always those that are checked
 	modWheel = segments.filter((s) => checked[s.segmentText]);
@@ -56,8 +66,7 @@ function SegmentList({ segments }: { segments: Segment[] }) {
 	// display the wheel
 	// then the checkbox below it
 
-	//TODO: add clear all
-	//TODO: add add all
+	//TODO: add to localstorage
 	return (
 		<>
 			<SpinWheel
@@ -65,6 +74,14 @@ function SegmentList({ segments }: { segments: Segment[] }) {
 				onFinished={(result) => console.log(`Spun to: ${result}`)}
 				arrowLocation={"top"}
 			/>
+			<div id="wheelbox-buttons">
+				<button type="button" onClick={selectAll}>
+					Select All
+				</button>
+				<button type="button" onClick={selectNone}>
+					Clear All
+				</button>
+			</div>
 			<div id="wheelbox">
 				{segments.map((s) => (
 					<label key={s.segmentText} id="wheelbox-item">
