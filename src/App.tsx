@@ -154,6 +154,10 @@ function App() {
 				fillWheel(selWheel, ThemeData);
 				break;
 			}
+			case "Custom": {
+				fillWheel(selWheel, StatData);
+				break;
+			}
 			default: {
 				console.log("Error on selecting wheel - Undefined wheel caught");
 				console.log(selectedWheel);
@@ -199,6 +203,9 @@ function App() {
 					</button>
 					<button type="button" onClick={(e) => setSelectedWheel("Theme")}>
 						Theme
+					</button>
+					<button type="button" onClick={(e) => setSelectedWheel("Custom")}>
+						Custom
 					</button>
 				</div>
 

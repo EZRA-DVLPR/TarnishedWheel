@@ -1,21 +1,24 @@
 {
 	"name": "Theme Builds",
 	"items": [
+		{ "label": "Archer" },
 		{ "label": "Barbarian" },
 		{ "label": "Battlemage" },
-		{ "label": "Soldier of Messmer" },
-		{ "label": "Lord of Frenzied Flame" },
 		{ "label": "Black Knife Assassin" },
-		{ "label": "Godskin Noble" },
-		{ "label": "Godskin Apostle" },
-		{ "label": "Dancer" },
+		{ "label": "Blackflame Apostle" },
 		{ "label": "Carian Knight" },
-		{ "label": "Follower of the Golden Order" },
+		{ "label": "Cleanrot Knight" },
+		{ "label": "Dancer" },
+		{ "label": "Dragonlord Follower" },
+		{ "label": "Fundamentalist" },
 		{ "label": "Gravity Mage" },
-		{ "label": "Dry-leaf Monk" },
-		{ "label": "Ancient Dragon Warrior" },
-		{ "label": "Archer" },
-		{ "label": "Death Knight" },
-		{ "label": "Sanguine Noble" }
+		{ "label": "Immovable Wall" },
+		{ "label": "Lord of Frenzied Flame" },
+		{ "label": "Patches" },
+		{ "label": "Pyromancer" },
+		{ "label": "Sanguine Noble" },
+		{ "label": "Death Knight", "DLC": "True"},
+		{ "label": "Dry-leaf Monk", "DLC": "True"},
+		{ "label": "Soldier of Messmer", "DLC": "True"}
 	]
 }
