@@ -26,7 +26,7 @@ const colors = [
 	"#000080",
 	"#800080",
 	"#008080",
-	"#C0C0C0",
+	"#3C4143",
 ];
 
 type Segment = {
@@ -50,16 +50,16 @@ function SegmentList({ segments }: { segments: Segment[] }) {
 	};
 	//BUG: when toggling, it doesn't update the color to be displayed with the slice
 	//this color choice should be recreated upon toggle
-	
+
 	// toggles all true
 	const selectAll = () => {
-		setChecked(Object.fromEntries(segments.map((s) => [s.segmentText, true])))
-	}
+		setChecked(Object.fromEntries(segments.map((s) => [s.segmentText, true])));
+	};
 
 	// toggles all false
 	const selectNone = () => {
-		setChecked({})
-	}
+		setChecked({});
+	};
 
 	// update modWheel to match always those that are checked
 	modWheel = segments.filter((s) => checked[s.segmentText]);
@@ -98,7 +98,7 @@ function SegmentList({ segments }: { segments: Segment[] }) {
 	);
 }
 
-// localstorage handling of [value, setValue] paired React State Hooks 
+// localstorage handling of [value, setValue] paired React State Hooks
 const useLocalStorage = (storageKey, fallbackState) => {
 	//creation of value and setting of value with localstorage
 	const [value, setValue] = useState(
@@ -115,17 +115,19 @@ const useLocalStorage = (storageKey, fallbackState) => {
 
 function App() {
 	const [valDLC, setDLC] = useLocalStorage("valDLC", true);
-
-	//declare all wheels based on json stuff
-	const statWheel: Segment[] = [];
-	const conceptWheel: Segment[] = [];
-	const themeWheel: Segment[] = [];
-	const weaponWheel: Segment[] = [];
+	const [selectedWheel, setSelectedWheel] = useLocalStorage(
+		"selectedWheel",
+		"Stat",
+	);
 
 	//fills the given wheel with the given json data
 	function fillWheel(wheel, data) {
 		data.items.forEach((item, index) => {
-			if ((item.DLC == null) || (item.DLC == "False") || (item.DLC == "True" && valDLC)) {
+			if (
+				item.DLC == null ||
+				item.DLC === "False" ||
+				(item.DLC === "True" && valDLC)
+			) {
 				wheel.push({
 					segmentText: item.label,
 					segColor: colors[index % 7],
@@ -134,11 +136,37 @@ function App() {
 		});
 	}
 
-	// fill the wheels with the corresponding data
-	fillWheel(statWheel, StatData);
-	fillWheel(conceptWheel, ConceptData);
-	fillWheel(themeWheel, ThemeData);
-	fillWheel(weaponWheel, WeaponData);
+	function fillSelectedWheel(selectedWheel, selWheel) {
+		switch (selectedWheel) {
+			case "Stat": {
+				fillWheel(selWheel, StatData);
+				break;
+			}
+			case "Concept": {
+				fillWheel(selWheel, ConceptData);
+				break;
+			}
+			case "Weapon": {
+				fillWheel(selWheel, WeaponData);
+				break;
+			}
+			case "Theme": {
+				fillWheel(selWheel, ThemeData);
+				break;
+			}
+			default: {
+				console.log("Error on selecting wheel - Undefined wheel caught");
+				console.log(selectedWheel);
+				break;
+			}
+		}
+	}
+
+	//the wheel that will be modified and displayed
+	const selWheel: Segment[] = [];
+
+	// whenever a change occurs to selectedWheel, we want to reflect this
+	const displaySelectedWheel = fillSelectedWheel(selectedWheel, selWheel);
 
 	return (
 		<>
@@ -159,13 +187,22 @@ function App() {
 					</label>
 				</div>
 
-				<SegmentList segments={statWheel} />
+				<div>
+					<button type="button" onClick={(e) => setSelectedWheel("Stat")}>
+						Stat
+					</button>
+					<button type="button" onClick={(e) => setSelectedWheel("Concept")}>
+						Concept
+					</button>
+					<button type="button" onClick={(e) => setSelectedWheel("Weapon")}>
+						Weapon
+					</button>
+					<button type="button" onClick={(e) => setSelectedWheel("Theme")}>
+						Theme
+					</button>
+				</div>
 
-				<SegmentList segments={weaponWheel} />
-
-				<SegmentList segments={themeWheel} />
-
-				<SegmentList segments={conceptWheel} />
+				<SegmentList key={selectedWheel} segments={selWheel} />
 			</section>
 
 			<Footer />
