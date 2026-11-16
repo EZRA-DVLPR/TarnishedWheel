@@ -17,8 +17,8 @@ import Footer from "./components/Footer.tsx";
 //methinks an SVG that just gets rotated, similar to the obsidian plugin.
 import { SpinWheel } from "spin-wheel-game";
 
-//INFO: list of the first 8 ANSI colors see:
-//https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
+//INFO: list of the first 7 ANSI non-black colors
+//see: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
 const colors = [
 	"#800000",
 	"#008000",
@@ -29,44 +29,46 @@ const colors = [
 	"#3C4143",
 ];
 
-type Segment = {
+//Type Alias for definition of Slice (text and color for a single slice of a wheel)
+type Slice = {
 	segmentText: string;
 	segColor: string;
 };
 
-// modWheel is the wheel that gets displayed
-let modWheel: Segment[] = [];
+//modWheel is the wheel that gets displayed on screen after choice from the user
+//the data inside will be rewritten, so it is initialized to an empty slice []
+let modWheel: Slice[] = [];
 
 //displays the wheel and checkbox based on the given wheel data
-function SegmentList({ segments }: { segments: Segment[] }) {
-	// holds record of state for the given segment[]
+function SliceList({ segments }: { segments: Slice[] }) {
+	//holds record of state for the given slice[]
 	const [checked, setChecked] = useState<Record<string, boolean>>(() =>
 		Object.fromEntries(segments.map((s) => [s.segmentText, true])),
 	);
 
-	// flips bool for the given named segmentText
+	//flips bool for the given segmentText
 	const toggle = (name: string) => {
 		setChecked((prev) => ({ ...prev, [name]: !prev[name] }));
 	};
 	//BUG: when toggling, it doesn't update the color to be displayed with the slice
 	//this color choice should be recreated upon toggle
 
-	// toggles all true
+	//toggles all true
 	const selectAll = () => {
 		setChecked(Object.fromEntries(segments.map((s) => [s.segmentText, true])));
 	};
 
-	// toggles all false
+	//toggles all false
 	const selectNone = () => {
 		setChecked({});
 	};
 
-	// update modWheel to match always those that are checked
+	//update modWheel to match always those that are checked
 	modWheel = segments.filter((s) => checked[s.segmentText]);
 
-	// display the wheel
-	// the buttons to (de)select all
-	// then the checkbox below
+	//display the wheel (only those that are checked)
+	//the buttons to (de)select all
+	//then the checkbox
 	return (
 		<>
 			<SpinWheel
@@ -98,14 +100,14 @@ function SegmentList({ segments }: { segments: Segment[] }) {
 	);
 }
 
-// localstorage handling of [value, setValue] paired React State Hooks
+//localstorage handling of [value, setValue] paired React State Hooks
 const useLocalStorage = (storageKey, fallbackState) => {
 	//creation of value and setting of value with localstorage
 	const [value, setValue] = useState(
 		JSON.parse(localStorage.getItem(storageKey)) ?? fallbackState,
 	);
 
-	//store as JSON-ified string as a pair
+	//store JSON-ified string
 	useEffect(() => {
 		localStorage.setItem(storageKey, JSON.stringify(value));
 	}, [value, storageKey]);
@@ -114,19 +116,44 @@ const useLocalStorage = (storageKey, fallbackState) => {
 };
 
 function App() {
+	//INFO: these values matter in persistent sessions so they should be stored
+	//DLC check for the wheels to display DLC only content
 	const [valDLC, setDLC] = useLocalStorage("valDLC", true);
+
+	//currently selected wheel
 	const [selectedWheel, setSelectedWheel] = useLocalStorage(
 		"selectedWheel",
 		"Stat",
 	);
 
-	//fills the given wheel with the given json data
+	//custom wheel information
+	const [dates, setDates] = useState(() => {
+		return JSON.parse(localStorage.getItem("myArray")) || [];
+	});
+
+	//INFO: Should not persist across sessions
+	const [inputValue, setInputValue] = useState("");
+
+	//updates localstorage of the custom wheel data
+	const saveDates = (newArray) => {
+		setDates(newArray);
+		localStorage.setItem("myArray", JSON.stringify(newArray));
+	};
+
+	//removes the elt @ index for custom wheel data
+	const removeAt = (index) => {
+		const copy = [...dates];
+		copy.splice(index, 1);
+		saveDates(copy);
+	};
+
+	//populates the given wheel with the given json data
 	function fillWheel(wheel, data) {
 		data.items.forEach((item, index) => {
 			if (
-				item.DLC == null ||
-				item.DLC === "False" ||
-				(item.DLC === "True" && valDLC)
+				item.DLC == null || //if no mention of DLC then DLC does not need to be true, then display
+				item.DLC === "False" || //if DLC is mentioned and set to 'False', then display
+				(item.DLC === "True" && valDLC) //if DLC is mentioned and set to 'True', valDLC must also be true to be displayed
 			) {
 				wheel.push({
 					segmentText: item.label,
@@ -136,6 +163,8 @@ function App() {
 		});
 	}
 
+	//when you make a selection for the desired wheel,
+	//populate the displayed wheel with the chosen data
 	function fillSelectedWheel(selectedWheel, selWheel) {
 		switch (selectedWheel) {
 			case "Stat": {
@@ -155,6 +184,8 @@ function App() {
 				break;
 			}
 			case "Custom": {
+				//TODO: Fix this such that the entirety of the data is custom
+				//i.e. from the user
 				fillWheel(selWheel, StatData);
 				break;
 			}
@@ -167,9 +198,9 @@ function App() {
 	}
 
 	//the wheel that will be modified and displayed
-	const selWheel: Segment[] = [];
+	const selWheel: Slice[] = [];
 
-	// whenever a change occurs to selectedWheel, we want to reflect this
+	//reflect changes to selectedWheel
 	const displaySelectedWheel = fillSelectedWheel(selectedWheel, selWheel);
 
 	return (
@@ -192,24 +223,86 @@ function App() {
 				</div>
 
 				<div>
-					<button type="button" onClick={(e) => setSelectedWheel("Stat")}>
+					<button type="button" onClick={() => setSelectedWheel("Stat")}>
 						Stat
 					</button>
-					<button type="button" onClick={(e) => setSelectedWheel("Concept")}>
+					<button type="button" onClick={() => setSelectedWheel("Concept")}>
 						Concept
 					</button>
-					<button type="button" onClick={(e) => setSelectedWheel("Weapon")}>
+					<button type="button" onClick={() => setSelectedWheel("Weapon")}>
 						Weapon
 					</button>
-					<button type="button" onClick={(e) => setSelectedWheel("Theme")}>
+					<button type="button" onClick={() => setSelectedWheel("Theme")}>
 						Theme
 					</button>
-					<button type="button" onClick={(e) => setSelectedWheel("Custom")}>
+					<button type="button" onClick={() => setSelectedWheel("Custom")}>
 						Custom
 					</button>
 				</div>
 
-				<SegmentList key={selectedWheel} segments={selWheel} />
+				{/* INFO: This should have some bounds so I can infer space used.
+					Basic maths:
+						- ~5 MB of maximum storage allowed for domain
+						- only strings can be stored
+						- already using localstorage for other stuff
+						- UTF-16 encoding for strings 
+							 => 2 bytes per character in Basic Latin
+						=> total size = (~5 million bytes) - 
+							(however many other bytes for localstorage stuff)
+						If we give users the option of 100 elements on the wheel
+							(pretty large probably number) as well as maximum length 
+							(50 characters)
+						=> 10,000 bytes used. Well below the localstorage limit.
+						We can increase it to even 1000 elements, barely achieving
+							100,000 bytes, barely 2% of the limit.
+						In reality, most users will probably not need 1000 elements or
+							500 character length, but any desire to increase max
+							size of the array or individual element is totally fine,
+							even by a magnitude of 10 or 100.
+					*/}
+				{/* INFO: No sanitization needed since we aren't processing it yet */}
+				{/* TODO: change the placeholder text to be more helpful */}
+				<input
+					type="text"
+					maxLength="50"
+					minLength="1"
+					value={inputValue}
+					onChange={(e) => setInputValue(e.target.value)}
+					placeholder="Enter new value here..."
+				/>
+
+				<button
+					type="button"
+					onClick={() => {
+						//remove whitespace @ ends
+						const trimmed = inputValue.trim();
+
+						//empty input so return
+						if (!trimmed) return;
+
+						//append the new value
+						saveDates([...dates, trimmed]);
+
+						//reset value of input box to empty string
+						setInputValue("");
+					}}
+				>
+					{/* TODO: change the text to be more helpful */}
+					Add User Data
+				</button>
+
+				<ul>
+					{dates.map((item, index) => (
+						<li key={index}>
+							{item}{" "}
+							<button type="button" onClick={() => removeAt(index)}>
+								x
+							</button>
+						</li>
+					))}
+				</ul>
+
+				<SliceList key={selectedWheel} segments={selWheel} />
 			</section>
 
 			<Footer />
