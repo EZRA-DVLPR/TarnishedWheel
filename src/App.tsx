@@ -196,15 +196,17 @@ function App() {
 						Clear All
 					</button>
 				</div>
-				<div>
-					<input
-						type="checkbox"
-						id="deletionMode"
-						checked={deletionMode}
-						onChange={(e) => setDeletionMode(e.target.checked)}
-					/>
-					<label htmlFor="deletionMode">Deletion Mode</label>
-				</div>
+				{selectedWheel === "Custom" ? (
+					<div>
+						<input
+							type="checkbox"
+							id="deletionMode"
+							checked={deletionMode}
+							onChange={(e) => setDeletionMode(e.target.checked)}
+						/>
+						<label htmlFor="deletionMode">Deletion Mode</label>
+					</div>
+				) : null}
 				<div id="wheelbox">
 					{segments.map((slice, index) => (
 						<label key={slice.segmentText} id="wheelbox-item">
