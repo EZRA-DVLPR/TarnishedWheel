@@ -66,6 +66,9 @@ function App() {
 		"Stat",
 	);
 
+	//toggle for showing/hiding the delete buttons on the slices
+	const [deletionMode, setDeletionMode] = useLocalStorage("deletionMode", true);
+
 	//custom wheel information
 	const [userWheelData, setUserWheelData] = useState(() => {
 		return JSON.parse(localStorage.getItem("userWheelData")) || [];
@@ -193,6 +196,15 @@ function App() {
 						Clear All
 					</button>
 				</div>
+				<div>
+					<input
+						type="checkbox"
+						id="deletionMode"
+						checked={deletionMode}
+						onChange={(e) => setDeletionMode(e.target.checked)}
+					/>
+					<label htmlFor="deletionMode">Deletion Mode</label>
+				</div>
 				<div id="wheelbox">
 					{segments.map((slice, index) => (
 						<label key={slice.segmentText} id="wheelbox-item">
@@ -203,7 +215,7 @@ function App() {
 							/>
 							{slice.segmentText}
 							{/*INFO: Only display the delete button when the custom wheel is selected*/}
-							{selectedWheel === "Custom" ? (
+							{selectedWheel === "Custom" && deletionMode ? (
 								<button
 									id="wheelbox-delete"
 									type="button"
