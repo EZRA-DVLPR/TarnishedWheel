@@ -35,68 +35,6 @@ type Slice = {
 	segColor: string;
 };
 
-//modWheel is the wheel that gets displayed on screen after selection from the user
-//the data inside will be rewritten, so it is initialized to an empty slice []
-let modWheel: Slice[] = [];
-
-//displays the wheel and checkbox based on the given wheel data
-function SliceList({ segments }: { segments: Slice[] }) {
-	//holds record of display state for the given slice[]
-	const [checked, setChecked] = useState<Record<string, boolean>>(() =>
-		Object.fromEntries(segments.map((s) => [s.segmentText, true])),
-	);
-
-	//flips bool for the given segmentText
-	const toggle = (name: string) => {
-		setChecked((prev) => ({ ...prev, [name]: !prev[name] }));
-	};
-	//BUG: when toggling, it doesn't update the color to be displayed with the slice
-	//this color choice should be recreated upon toggle
-
-	//toggles all true
-	const selectAll = () => {
-		setChecked(Object.fromEntries(segments.map((s) => [s.segmentText, true])));
-	};
-
-	//toggles all false
-	const selectNone = () => {
-		setChecked({});
-	};
-
-	//update modWheel to match always those that are checked
-	modWheel = segments.filter((s) => checked[s.segmentText]);
-
-	return (
-		<>
-			<SpinWheel
-				segments={modWheel}
-				onFinished={(result) => console.log(`Spun to: ${result}`)}
-				arrowLocation={"top"}
-			/>
-			<div id="wheelbox-buttons">
-				<button type="button" onClick={selectAll}>
-					Select All
-				</button>
-				<button type="button" onClick={selectNone}>
-					Clear All
-				</button>
-			</div>
-			<div id="wheelbox">
-				{segments.map((s) => (
-					<label key={s.segmentText} id="wheelbox-item">
-						<input
-							type="checkbox"
-							checked={!!checked[s.segmentText]}
-							onChange={() => toggle(s.segmentText)}
-						/>
-						{s.segmentText}
-					</label>
-				))}
-			</div>
-		</>
-	);
-}
-
 //localstorage handling of [value, setValue] paired React State Hooks
 const useLocalStorage = (storageKey, fallbackState) => {
 	//creation of value and setting of value with localstorage
@@ -113,7 +51,11 @@ const useLocalStorage = (storageKey, fallbackState) => {
 };
 
 function App() {
-	//INFO: these values matter in persistent sessions
+	//modWheel is the wheel that gets displayed on screen after selection from the user
+	//the data inside will be rewritten, so it is initialized to an empty slice []
+	let modWheel: Slice[] = [];
+
+	//INFO: these hooks matter in persistent sessions
 
 	//DLC check for the wheels to display DLC only content
 	const [valDLC, setDLC] = useLocalStorage("valDLC", true);
@@ -125,7 +67,6 @@ function App() {
 	);
 
 	//custom wheel information
-	//TODO: rename the localstorage key to something useful instead of userWheelData
 	const [userWheelData, setUserWheelData] = useState(() => {
 		return JSON.parse(localStorage.getItem("userWheelData")) || [];
 	});
@@ -133,13 +74,13 @@ function App() {
 	//INFO: user input box should not persist across sessions
 	const [inputValue, setInputValue] = useState("");
 
-	//updates localstorage of the custom wheel data
+	//updates localstorage with the new user wheel data
 	const saveUserWheelData = (newArray) => {
 		setUserWheelData(newArray);
 		localStorage.setItem("userWheelData", JSON.stringify(newArray));
 	};
 
-	//removes the elt @ index for custom wheel data
+	//removes the elt @ index for user wheel data
 	const removeAt = (index) => {
 		const copy = [...userWheelData];
 		copy.splice(index, 1);
@@ -208,6 +149,76 @@ function App() {
 	//reflect changes to selectedWheel
 	const displaySelectedWheel = fillSelectedWheel(selectedWheel, selWheel);
 
+	//displays the wheel and checkbox based on the given wheel data
+	function SliceList({ segments }: { segments: Slice[] }) {
+		//holds record of display state for the given slice[]
+		const [checked, setChecked] = useState<Record<string, boolean>>(() =>
+			Object.fromEntries(segments.map((s) => [s.segmentText, true])),
+		);
+
+		//flips bool for the given segmentText
+		const toggle = (name: string) => {
+			setChecked((prev) => ({ ...prev, [name]: !prev[name] }));
+		};
+		//BUG: when toggling, it doesn't update the color to be displayed with the slice
+		//this color choice should be recreated upon toggle
+
+		//toggles all true
+		const selectAll = () => {
+			setChecked(
+				Object.fromEntries(segments.map((s) => [s.segmentText, true])),
+			);
+		};
+
+		//toggles all false
+		const selectNone = () => {
+			setChecked({});
+		};
+
+		//update modWheel to match always those that are checked
+		modWheel = segments.filter((s) => checked[s.segmentText]);
+
+		return (
+			<>
+				<SpinWheel
+					segments={modWheel}
+					onFinished={(result) => console.log(`Spun to: ${result}`)}
+					arrowLocation={"top"}
+				/>
+				<div id="wheelbox-buttons">
+					<button type="button" onClick={selectAll}>
+						Select All
+					</button>
+					<button type="button" onClick={selectNone}>
+						Clear All
+					</button>
+				</div>
+				<div id="wheelbox">
+					{segments.map((slice, index) => (
+						<label key={slice.segmentText} id="wheelbox-item">
+							<input
+								type="checkbox"
+								checked={!!checked[slice.segmentText]}
+								onChange={() => toggle(slice.segmentText)}
+							/>
+							{slice.segmentText}
+							{/*INFO: Only display the delete button when the custom wheel is selected*/}
+							{selectedWheel === "Custom" ? (
+								<button
+									id="wheelbox-delete"
+									type="button"
+									onClick={() => removeAt(index)}
+								>
+									x
+								</button>
+							) : null}
+						</label>
+					))}
+				</div>
+			</>
+		);
+	}
+
 	return (
 		<>
 			<section id="spacer" />
@@ -245,8 +256,7 @@ function App() {
 				</div>
 				{selectedWheel === "Custom" ? (
 					<div>
-						<div>
-							{/* INFO: This should have some bounds so I can infer space used.
+						{/* INFO: This should have some bounds so I can infer space used.
 						Basic maths:
 							- ~5 MB of maximum storage allowed for domain
 							- only strings can be stored
@@ -266,52 +276,40 @@ function App() {
 								size of the array or individual element is totally fine,
 								even by a magnitude of 10 or 100.
 						*/}
-							{/* INFO: No sanitization needed since we aren't processing it yet */}
-							<input
-								type="text"
-								maxLength="50"
-								minLength="1"
-								value={inputValue}
-								onChange={(e) => setInputValue(e.target.value)}
-								placeholder="Add a new wheel slice..."
-							/>
-							<button
-								type="button"
-								onClick={() => {
-									//remove whitespace @ ends
-									const trimmed = inputValue.trim();
+						{/* INFO: No sanitization needed since we aren't processing it yet */}
+						<input
+							type="text"
+							maxLength="50"
+							minLength="1"
+							value={inputValue}
+							onChange={(e) => setInputValue(e.target.value)}
+							placeholder="Add a new wheel slice..."
+						/>
+						<button
+							type="button"
+							onClick={() => {
+								//remove whitespace @ ends
+								const trimmed = inputValue.trim();
 
-									//empty input so return
-									if (!trimmed) return;
+								//empty input so return
+								if (!trimmed) return;
 
-									//TODO: prevent duplicate entries including capitalization changes
+								//TODO: prevent duplicate entries including capitalization changes
 
-									//TODO: prevent adding more elts if the current wheel has 100 elts.
+								//TODO: prevent adding more elts if the current wheel has 100 elts.
 
-									//append the new value
-									saveUserWheelData([...userWheelData, trimmed]);
+								//append the new value
+								saveUserWheelData([...userWheelData, trimmed]);
 
-									//reset value of input box to empty string
-									setInputValue("");
-								}}
-							>
-								Add Custom Wheel Slice
-							</button>
-						</div>
-						<div>
-							<ul>
-								{userWheelData.map((item, index) => (
-									<li key={index}>
-										{item}{" "}
-										<button type="button" onClick={() => removeAt(index)}>
-											x
-										</button>
-									</li>
-								))}
-							</ul>
-						</div>
+								//reset value of input box to empty string
+								setInputValue("");
+							}}
+						>
+							Add Custom Wheel Slice
+						</button>
 					</div>
 				) : null}
+
 				<SliceList key={selectedWheel} segments={selWheel} />
 			</section>
 
