@@ -125,25 +125,25 @@ function App() {
 	);
 
 	//custom wheel information
-	//TODO: rename the localstorage key to something useful instead of myArray
-	const [dates, setDates] = useState(() => {
-		return JSON.parse(localStorage.getItem("myArray")) || [];
+	//TODO: rename the localstorage key to something useful instead of userWheelData
+	const [userWheelData, setUserWheelData] = useState(() => {
+		return JSON.parse(localStorage.getItem("userWheelData")) || [];
 	});
 
 	//INFO: user input box should not persist across sessions
 	const [inputValue, setInputValue] = useState("");
 
 	//updates localstorage of the custom wheel data
-	const saveDates = (newArray) => {
-		setDates(newArray);
-		localStorage.setItem("myArray", JSON.stringify(newArray));
+	const saveUserWheelData = (newArray) => {
+		setUserWheelData(newArray);
+		localStorage.setItem("userWheelData", JSON.stringify(newArray));
 	};
 
 	//removes the elt @ index for custom wheel data
 	const removeAt = (index) => {
-		const copy = [...dates];
+		const copy = [...userWheelData];
 		copy.splice(index, 1);
-		saveDates(copy);
+		saveUserWheelData(copy);
 	};
 
 	//populates the given wheel with the given json data
@@ -179,19 +179,18 @@ function App() {
 				break;
 			}
 			case "Theme": {
-				console.log(ThemeData);
 				fillWheel(selWheel, ThemeData);
 				break;
 			}
 			case "Custom": {
 				//INFO:we want to re-create the syntax of the JSON with the custom data
 				//"items": [
-				//{"label": dates[0]},
-				//{"label": dates[1]},
+				//{"label": userWheelData[0]},
+				//{"label": userWheelData[1]},
 				//...
 				//]
 				fillWheel(selWheel, {
-					items: dates.map((value) => ({ label: value })),
+					items: userWheelData.map((value) => ({ label: value })),
 				});
 				break;
 			}
@@ -227,7 +226,6 @@ function App() {
 						Include the DLC - Shadow of the Erdtree
 					</label>
 				</div>
-
 				<div>
 					<button type="button" onClick={() => setSelectedWheel("Stat")}>
 						Stat
@@ -245,69 +243,75 @@ function App() {
 						Custom
 					</button>
 				</div>
+				{selectedWheel === "Custom" ? (
+					<div>
+						<div>
+							{/* INFO: This should have some bounds so I can infer space used.
+						Basic maths:
+							- ~5 MB of maximum storage allowed for domain
+							- only strings can be stored
+							- already using localstorage for other stuff
+							- UTF-16 encoding for strings 
+								 => 2 bytes per character in Basic Latin
+							=> total size = (~5 million bytes) - 
+								(however many other bytes for localstorage stuff)
+							If we give users the option of 100 elements on the wheel
+								(pretty large probably number) as well as maximum length 
+								(50 characters)
+							=> 10,000 bytes used. Well below the localstorage limit.
+							We can increase it to even 1000 elements, barely achieving
+								100,000 bytes, barely 2% of the limit.
+							In reality, most users will probably not need 1000 elements or
+								500 character length, but any desire to increase max
+								size of the array or individual element is totally fine,
+								even by a magnitude of 10 or 100.
+						*/}
+							{/* INFO: No sanitization needed since we aren't processing it yet */}
+							<input
+								type="text"
+								maxLength="50"
+								minLength="1"
+								value={inputValue}
+								onChange={(e) => setInputValue(e.target.value)}
+								placeholder="Add a new wheel slice..."
+							/>
+							<button
+								type="button"
+								onClick={() => {
+									//remove whitespace @ ends
+									const trimmed = inputValue.trim();
 
-				{/* INFO: This should have some bounds so I can infer space used.
-					Basic maths:
-						- ~5 MB of maximum storage allowed for domain
-						- only strings can be stored
-						- already using localstorage for other stuff
-						- UTF-16 encoding for strings 
-							 => 2 bytes per character in Basic Latin
-						=> total size = (~5 million bytes) - 
-							(however many other bytes for localstorage stuff)
-						If we give users the option of 100 elements on the wheel
-							(pretty large probably number) as well as maximum length 
-							(50 characters)
-						=> 10,000 bytes used. Well below the localstorage limit.
-						We can increase it to even 1000 elements, barely achieving
-							100,000 bytes, barely 2% of the limit.
-						In reality, most users will probably not need 1000 elements or
-							500 character length, but any desire to increase max
-							size of the array or individual element is totally fine,
-							even by a magnitude of 10 or 100.
-					*/}
-				{/* INFO: No sanitization needed since we aren't processing it yet */}
-				<input
-					type="text"
-					maxLength="50"
-					minLength="1"
-					value={inputValue}
-					onChange={(e) => setInputValue(e.target.value)}
-					placeholder="Add a new wheel slice..."
-				/>
+									//empty input so return
+									if (!trimmed) return;
 
-				<button
-					type="button"
-					onClick={() => {
-						//remove whitespace @ ends
-						const trimmed = inputValue.trim();
+									//TODO: prevent duplicate entries including capitalization changes
 
-						//empty input so return
-						if (!trimmed) return;
+									//TODO: prevent adding more elts if the current wheel has 100 elts.
 
-						//TODO: prevent duplicate entries including capitalization changes
+									//append the new value
+									saveUserWheelData([...userWheelData, trimmed]);
 
-						//append the new value
-						saveDates([...dates, trimmed]);
-
-						//reset value of input box to empty string
-						setInputValue("");
-					}}
-				>
-					Add Custom Wheel Slice
-				</button>
-
-				<ul>
-					{dates.map((item, index) => (
-						<li key={index}>
-							{item}{" "}
-							<button type="button" onClick={() => removeAt(index)}>
-								x
+									//reset value of input box to empty string
+									setInputValue("");
+								}}
+							>
+								Add Custom Wheel Slice
 							</button>
-						</li>
-					))}
-				</ul>
-
+						</div>
+						<div>
+							<ul>
+								{userWheelData.map((item, index) => (
+									<li key={index}>
+										{item}{" "}
+										<button type="button" onClick={() => removeAt(index)}>
+											x
+										</button>
+									</li>
+								))}
+							</ul>
+						</div>
+					</div>
+				) : null}
 				<SliceList key={selectedWheel} segments={selWheel} />
 			</section>
 
