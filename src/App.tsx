@@ -179,13 +179,20 @@ function App() {
 				break;
 			}
 			case "Theme": {
+				console.log(ThemeData);
 				fillWheel(selWheel, ThemeData);
 				break;
 			}
 			case "Custom": {
-				//TODO: Fix this such that the entirety of the data is custom
-				//i.e. from the user
-				fillWheel(selWheel, StatData);
+				//INFO:we want to re-create the syntax of the JSON with the custom data
+				//"items": [
+				//"label": dates[0],
+				//"label": dates[1],
+				//...
+				//]
+				fillWheel(selWheel, {
+					items: dates.map((value) => ({ label: value })),
+				});
 				break;
 			}
 			default: {
@@ -277,6 +284,8 @@ function App() {
 
 						//empty input so return
 						if (!trimmed) return;
+
+						//TODO: prevent duplicate entries including capitalization changes
 
 						//append the new value
 						saveDates([...dates, trimmed]);
