@@ -116,13 +116,13 @@
 	border-width: medium;
 	border-color: coral;
 	padding: 26px;
-	height: 300px;
+	max-height: 300px;
 	@media (max-width: 1024px) {
 		gap: 8px;
 		column-gap: 36px;
 		border-radius: 8px;
 		padding: 20px;
-		height: 400px;
+		max-height: 400px;
 	}
 }
 
