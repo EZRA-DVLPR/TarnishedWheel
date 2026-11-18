@@ -186,8 +186,8 @@ function App() {
 			case "Custom": {
 				//INFO:we want to re-create the syntax of the JSON with the custom data
 				//"items": [
-				//"label": dates[0],
-				//"label": dates[1],
+				//{"label": dates[0]},
+				//{"label": dates[1]},
 				//...
 				//]
 				fillWheel(selWheel, {
