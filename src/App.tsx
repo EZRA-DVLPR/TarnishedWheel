@@ -238,17 +238,20 @@ function App() {
 			<Header />
 
 			<section id="center">
-				<div>
-					<input
-						type="checkbox"
-						id="dlc-toggle"
-						checked={valDLC}
-						onChange={(e) => setDLC(e.target.checked)}
-					/>
-					<label htmlFor="dlc-toggle">
-						Include the DLC - Shadow of the Erdtree
-					</label>
-				</div>
+				{/*TODO: I am curious on the UI/UX, since it shifts the stuff down. Fiddle with empty space so that it doesn't move the rest of the data vertically*/}
+				{selectedWheel !== "Custom" ? (
+					<div>
+						<input
+							type="checkbox"
+							id="dlc-toggle"
+							checked={valDLC}
+							onChange={(e) => setDLC(e.target.checked)}
+						/>
+						<label htmlFor="dlc-toggle">
+							Include the DLC - Shadow of the Erdtree
+						</label>
+					</div>
+				) : null}
 				<div>
 					<button type="button" onClick={() => setSelectedWheel("Stat")}>
 						Stat
