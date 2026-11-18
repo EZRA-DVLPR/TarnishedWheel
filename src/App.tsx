@@ -17,7 +17,7 @@ import Footer from "./components/Footer.tsx";
 //methinks an SVG that just gets rotated, similar to the obsidian plugin.
 import { SpinWheel } from "spin-wheel-game";
 
-//INFO: list of the first 7 ANSI non-black colors
+//INFO: list of the first 7 non-black ANSI colors
 //see: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
 const colors = [
 	"#800000",
@@ -35,13 +35,13 @@ type Slice = {
 	segColor: string;
 };
 
-//modWheel is the wheel that gets displayed on screen after choice from the user
+//modWheel is the wheel that gets displayed on screen after selection from the user
 //the data inside will be rewritten, so it is initialized to an empty slice []
 let modWheel: Slice[] = [];
 
 //displays the wheel and checkbox based on the given wheel data
 function SliceList({ segments }: { segments: Slice[] }) {
-	//holds record of state for the given slice[]
+	//holds record of display state for the given slice[]
 	const [checked, setChecked] = useState<Record<string, boolean>>(() =>
 		Object.fromEntries(segments.map((s) => [s.segmentText, true])),
 	);
@@ -66,9 +66,6 @@ function SliceList({ segments }: { segments: Slice[] }) {
 	//update modWheel to match always those that are checked
 	modWheel = segments.filter((s) => checked[s.segmentText]);
 
-	//display the wheel (only those that are checked)
-	//the buttons to (de)select all
-	//then the checkbox
 	return (
 		<>
 			<SpinWheel
@@ -116,7 +113,8 @@ const useLocalStorage = (storageKey, fallbackState) => {
 };
 
 function App() {
-	//INFO: these values matter in persistent sessions so they should be stored
+	//INFO: these values matter in persistent sessions
+
 	//DLC check for the wheels to display DLC only content
 	const [valDLC, setDLC] = useLocalStorage("valDLC", true);
 
@@ -127,11 +125,12 @@ function App() {
 	);
 
 	//custom wheel information
+	//TODO: rename the localstorage key to something useful instead of myArray
 	const [dates, setDates] = useState(() => {
 		return JSON.parse(localStorage.getItem("myArray")) || [];
 	});
 
-	//INFO: Should not persist across sessions
+	//INFO: user input box should not persist across sessions
 	const [inputValue, setInputValue] = useState("");
 
 	//updates localstorage of the custom wheel data
@@ -261,14 +260,13 @@ function App() {
 							even by a magnitude of 10 or 100.
 					*/}
 				{/* INFO: No sanitization needed since we aren't processing it yet */}
-				{/* TODO: change the placeholder text to be more helpful */}
 				<input
 					type="text"
 					maxLength="50"
 					minLength="1"
 					value={inputValue}
 					onChange={(e) => setInputValue(e.target.value)}
-					placeholder="Enter new value here..."
+					placeholder="Add a new wheel slice..."
 				/>
 
 				<button
@@ -287,8 +285,7 @@ function App() {
 						setInputValue("");
 					}}
 				>
-					{/* TODO: change the text to be more helpful */}
-					Add User Data
+					Add Custom Wheel Slice
 				</button>
 
 				<ul>
