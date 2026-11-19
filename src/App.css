@@ -17,9 +17,9 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	gap: 4px;
 	height: auto;
 	width: 1000px;
+	position: relative;
 }
 
 #wheel-pointer {
@@ -33,6 +33,40 @@
 	width: 67%;
 	height: auto;
 	display: block;
+}
+
+/*TODO: fix the translation since it depends on screen size now...*/
+#wheel-button {
+	background-color: salmon;
+	border-color: #000000;
+	border-width: 10px;
+	border-radius: 90px;
+	border-style: solid;
+	height: 100px;
+	width: 100px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	/*transform: translate(-50px, 30px);*/
+	transform: translate(-50%, 30%);
+	font-size: 25px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: transform .2s;
+}
+
+#wheel-button:hover {
+	transform: scale(1.1) translate(-45%, 29%);
+}
+
+#wheel-button:disabled {
+	cursor: not-allowed;
+	opacity: 0.95;
+}
+
+#wheel-winner {
+	font-size: 90px;
+	font-weight: bold;
 }
 
 #footer {

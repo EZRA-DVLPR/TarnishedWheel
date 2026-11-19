@@ -30,6 +30,12 @@ const SEGMENTS = [
 	"Prize D",
 	"Prize E",
 	"Prize F",
+	"Prize A",
+	"Prize B",
+	"Prize C",
+	"Prize D",
+	"Prize E",
+	"Prize F",
 ];
 
 //BUG: There seems to be an issue when you click out of the browser where the button isn't pressable?
@@ -82,14 +88,16 @@ function Wheel() {
 	const size = 200;
 
 	return (
-		<div className="relative flex items-center justify-center" id="wheel">
-			{!spinning && <p>Winner: {SEGMENTS[winner]}</p>}
+		<div id="wheel">
+			{/* winning slice's label is displayed here */}
+			{spinning ? (
+				<h1>&nbsp;</h1>
+			) : (
+				<h1 id="wheel-winner">{SEGMENTS[winner]}</h1>
+			)}
+
 			{/* static pointer at top */}
-			<svg
-				id="wheel-pointer"
-				viewBox="0 0 40 40"
-				className="absolute left-1/2 top-0 -translate-x-1/2 z-10"
-			>
+			<svg id="wheel-pointer" viewBox="0 0 40 40">
 				<title>Wheel Pointer</title>
 				<polygon points="20,38 12,10 28,10" fill="#E6E6E6" />
 			</svg>
@@ -98,6 +106,8 @@ function Wheel() {
 			<svg
 				id="wheel-svg"
 				viewBox={`0 0 ${size} ${size}`}
+				width={300}
+				height={300}
 				style={{ transform: `rotate(${rotation}deg)` }}
 			>
 				<title>Wheel</title>
@@ -164,7 +174,13 @@ function Wheel() {
 				})}
 			</svg>
 
-			<button type="button" onClick={spin} disabled={spinning}>
+			{/* Spin button which gets moved to teh center of the wheel */}
+			<button
+				id="wheel-button"
+				type="button"
+				onClick={spin}
+				disabled={spinning}
+			>
 				Spin
 			</button>
 		</div>
