@@ -1,5 +1,17 @@
 import { useState } from "react";
 
+//INFO: list of the first 7 non-black ANSI colors
+//see: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
+const colors = [
+	"#800000",
+	"#008000",
+	"#808000",
+	"#000080",
+	"#800080",
+	"#008080",
+	"#3C4143",
+];
+
 // TODO: import the wheel data instead of this for testing
 const SEGMENTS = [
 	"Prize A",
@@ -17,6 +29,9 @@ const SEGMENTS = [
 	"Prize E",
 	"Prize F",
 ];
+
+//BUG: There seems to be an issue when you click out of the browser where the button isn't pressable?
+//i'm not sure how to replicate it, but it is consistent whenever i seem to be out of the browser and click something else
 
 //length of arc that the slice will cover in degrees
 const sliceAngleLength = 360 / SEGMENTS.length;
@@ -115,7 +130,7 @@ function Wheel() {
 								L ${x1},${y1}
 								A ${r} ${r} 0 0 1 ${x2},${y2} 
 								Z`}
-							fill={`hsl(${(i * 360) / SEGMENTS.length}, 70%, 60%)`}
+							fill={colors[i % colors.length]}
 						/>
 					);
 				})}
