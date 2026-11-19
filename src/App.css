@@ -12,6 +12,29 @@
   }
 }
 
+#wheel {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+	height: auto;
+	width: 1000px;
+}
+
+#wheel-pointer {
+	width: 10%;
+	height: auto;
+	display: block;
+}
+
+#wheel-svg {
+	/* sic seben */
+	width: 67%;
+	height: auto;
+	display: block;
+}
+
 #footer {
   margin-top: 40px;
   display: flex;

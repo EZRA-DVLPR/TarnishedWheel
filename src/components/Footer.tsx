@@ -62,7 +62,7 @@ function Footer() {
 							</a>
 						</li>
 						<li>
-							{/*TODO: Fix the link */}
+							{/*TODO: Fix the link so that it entsers a DM to my discord  */}
 							<a
 								href="https://ezra-dvlpr.com/blog"
 								target="_blank"

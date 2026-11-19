@@ -12,6 +12,7 @@ import ConceptData from "./data/ConceptBuilds.json";
 //import other components
 import Header from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
+import Wheel from "./components/Wheel.tsx";
 
 //TODO: make the wheel myself. it fuckin lags??? are we serious??? in the big 26???
 //methinks an SVG that just gets rotated, similar to the obsidian plugin.
@@ -240,6 +241,8 @@ function App() {
 			<Header />
 
 			<section id="center">
+				<Wheel />
+
 				{/*TODO: I am curious on the UI/UX, since it shifts the stuff down. Fiddle with empty space so that it doesn't move the rest of the data vertically*/}
 				{selectedWheel !== "Custom" ? (
 					<div>
