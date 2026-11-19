@@ -20,14 +20,6 @@ const SEGMENTS = [
 	"Prize D",
 	"Prize E",
 	"Prize F",
-	"Prize A",
-	"Prize B",
-	"Prize C",
-	"Prize D",
-	"Prize E",
-	"Prize F",
-	"Prize E",
-	"Prize F",
 ];
 
 //BUG: There seems to be an issue when you click out of the browser where the button isn't pressable?
@@ -98,7 +90,7 @@ function Wheel() {
 				style={{ transform: `rotate(${rotation}deg)` }}
 			>
 				<title>Wheel</title>
-				{SEGMENTS.map((_, i) => {
+				{SEGMENTS.map((label, i) => {
 					//simplifies calcs
 					const r = size / 2;
 
@@ -117,26 +109,48 @@ function Wheel() {
 					const x2 = cx + r * Math.cos(endAngle);
 					const y2 = cy + r * Math.sin(endAngle);
 
+					//middle angle inside the arc
+					const mid = (startAngle + endAngle) / 2;
+
+					//(lx,ly) is the point where we add the text
+					const lx = cx + Math.cos(mid) * r * 0.9; //offset a small bit to move text away from arc edge
+					const ly = cy + Math.sin(mid) * r * 0.9; //offset a small bit to move text away from arc edge
+
 					//INFO: large is not needed since the angle of every slice will always be =< 180 deg.
 					//
 					// The drawing is as follows:
 					// 	draw a straight line from center to (x1,y1)
 					// 	then draw an arc from (x1,y1) to (x2,y2) without any rotation or large flag, but with the sweep flag
 					//	then return to the origin
+					// once the drawing is finished, we add the color
+					// followed by the text
 					return (
-						<path
-							key={i}
-							d={`M ${cx} ${cy}
+						<g key={label}>
+							<path
+								d={`M ${cx} ${cy}
 								L ${x1},${y1}
 								A ${r} ${r} 0 0 1 ${x2},${y2} 
 								Z`}
-							fill={colors[i % colors.length]}
-						/>
+								fill={colors[i % colors.length]}
+							/>
+							<text
+								x={lx}
+								y={ly}
+								textAnchor="start"
+								dominantBaseline="middle"
+								fill="#fff"
+								fontSize="10"
+								fontWeight="bold"
+								transform={`rotate(${mid * (180 / Math.PI) + 180}, ${lx}, ${ly})`}
+							>
+								{label}
+							</text>
+						</g>
 					);
 				})}
 			</svg>
 
-			<button onClick={spin} disabled={spinning}>
+			<button type="button" onClick={spin} disabled={spinning}>
 				Spin
 			</button>
 			{!spinning && <p>Winner: {SEGMENTS[winner]}</p>}
