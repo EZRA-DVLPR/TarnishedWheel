@@ -12,6 +12,16 @@ const colors = [
 	"#3C4143",
 ];
 
+const colors2 = [
+	"#60686C",
+	"#CC0000",
+	"#33CC00",
+	"#999900",
+	"#0000CC",
+	"#CC00CC",
+	"#00CCCC",
+];
+
 // TODO: import the wheel data instead of this for testing
 const SEGMENTS = [
 	"Prize A",
@@ -73,6 +83,7 @@ function Wheel() {
 
 	return (
 		<div className="relative flex items-center justify-center" id="wheel">
+			{!spinning && <p>Winner: {SEGMENTS[winner]}</p>}
 			{/* static pointer at top */}
 			<svg
 				id="wheel-pointer"
@@ -131,7 +142,10 @@ function Wheel() {
 								L ${x1},${y1}
 								A ${r} ${r} 0 0 1 ${x2},${y2} 
 								Z`}
-								fill={colors[i % colors.length]}
+								//fill={colors[i % colors.length]}
+								fill={colors2[i % colors.length]}
+								//TODO: needs to be between colors2 and below fill
+								//fill={`hsl(${(i * 360) / SEGMENTS.length}, 70%, 60%)`} //fill={colors2[i % colors.length]}
 							/>
 							<text
 								x={lx}
@@ -153,7 +167,6 @@ function Wheel() {
 			<button type="button" onClick={spin} disabled={spinning}>
 				Spin
 			</button>
-			{!spinning && <p>Winner: {SEGMENTS[winner]}</p>}
 		</div>
 	);
 }
