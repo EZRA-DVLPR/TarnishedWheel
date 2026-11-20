@@ -1,129 +1,36 @@
 {
 	"items": [
-		{
-			"label": "Daggers",
-			"DLC": "False"
-		},
-		{
-			"label": "Straight Swords",
-			"DLC": "False"
-		},
-		{
-			"label": "Greatswords",
-			"DLC": "False"
-		},
-		{
-			"label": "Colossal Swords",
-			"DLC": "False"
-		},
-		{
-			"label": "Thrusting Swords",
-			"DLC": "False"
-		},
-		{
-			"label": "Heavy Thrusting Swords",
-			"DLC": "False"
-		},
-		{
-			"label": "Curved Swords",
-			"DLC": "False"
-		},
-		{
-			"label": "Curved Greatswords",
-			"DLC": "False"
-		},
-		{
-			"label": "Katanas",
-			"DLC": "False"
-		},
-		{
-			"label": "Twinblades",
-			"DLC": "False"
-		},
-		{
-			"label": "Axes",
-			"DLC": "False"
-		},
-		{
-			"label": "Greataxes",
-			"DLC": "False"
-		},
-		{
-			"label": "Hammers",
-			"DLC": "False"
-		},
-		{
-			"label": "Flails",
-			"DLC": "False"
-		},
-		{
-			"label": "Great Hammers",
-			"DLC": "False"
-		},
-		{
-			"label": "Colossal Weapons",
-			"DLC": "False"
-		},
-		{
-			"label": "Spears",
-			"DLC": "False"
-		},
-		{
-			"label": "Great Spears",
-			"DLC": "False"
-		},
-		{
-			"label": "Halberds",
-			"DLC": "False"
-		},
-		{
-			"label": "Reapers",
-			"DLC": "False"
-		},
-		{
-			"label": "Whips",
-			"DLC": "False"
-		},
-		{
-			"label": "Fists",
-			"DLC": "False"
-		},
-		{
-			"label": "Claws",
-			"DLC": "False"
-		},
-		{
-			"label": "Light Bows",
-			"DLC": "False"
-		},
-		{
-			"label": "Bows",
-			"DLC": "False"
-		},
-		{
-			"label": "Greatbows",
-			"DLC": "False"
-		},
-		{
-			"label": "Crossbows",
-			"DLC": "False"
-		},
-		{
-			"label": "Ballistas",
-			"DLC": "False"
-		},
-		{
-			"label": "Glintstone Staffs",
-			"DLC": "False"
-		},
-		{
-			"label": "Sacred Seals",
-			"DLC": "False"
-		},
-		{
-			"label": "Torches",
-			"DLC": "False"
-		},
+		{ "label": "Daggers" },
+		{ "label": "Straight Swords" },
+		{ "label": "Greatswords" },
+		{ "label": "Colossal Swords" },
+		{ "label": "Thrusting Swords" },
+		{ "label": "Heavy Thrusting Swords" },
+		{ "label": "Curved Swords" },
+		{ "label": "Curved Greatswords" },
+		{ "label": "Katanas" },
+		{ "label": "Twinblades" },
+		{ "label": "Axes" },
+		{ "label": "Greataxes" },
+		{ "label": "Hammers" },
+		{ "label": "Flails" },
+		{ "label": "Great Hammers" },
+		{ "label": "Colossal Weapons" },
+		{ "label": "Spears" },
+		{ "label": "Great Spears" },
+		{ "label": "Halberds" },
+		{ "label": "Reapers" },
+		{ "label": "Whips" },
+		{ "label": "Fists" },
+		{ "label": "Claws" },
+		{ "label": "Light Bows" },
+		{ "label": "Bows" },
+		{ "label": "Greatbows" },
+		{ "label": "Crossbows" },
+		{ "label": "Ballistas" },
+		{ "label": "Glintstone Staffs" },
+		{ "label": "Sacred Seals" },
+		{ "label": "Torches" },
 		{
 			"label": "Thrusting Shields",
 			"DLC": "True"

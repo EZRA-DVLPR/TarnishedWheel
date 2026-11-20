@@ -7,17 +7,20 @@
 		{ "label": "Blackflame Apostle" },
 		{ "label": "Carian Knight" },
 		{ "label": "Cleanrot Knight" },
+		{ "label": "Cosplay an NPC" },
 		{ "label": "Dancer" },
 		{ "label": "Dragonlord Follower" },
 		{ "label": "Fundamentalist" },
 		{ "label": "Gravity Mage" },
 		{ "label": "Immovable Wall" },
 		{ "label": "Lord of Frenzied Flame" },
-		{ "label": "Patches" },
 		{ "label": "Pyromancer" },
 		{ "label": "Sanguine Noble" },
+		{ "label": "Scavenger"},
+		{ "label": "Sniper"},
 		{ "label": "Death Knight", "DLC": "True"},
 		{ "label": "Dry-leaf Monk", "DLC": "True"},
+		{ "label": "Perfumer", "DLC": "True" },
 		{ "label": "Soldier of Messmer", "DLC": "True"}
 	]
 }

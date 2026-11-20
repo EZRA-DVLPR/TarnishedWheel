@@ -215,8 +215,7 @@ function App() {
 			<Header />
 
 			<section id="center">
-				{/*TODO: I am curious on the UI/UX, since it shifts the stuff down. Fiddle with empty space so that it doesn't move the rest of the data vertically*/}
-				{selectedWheel !== "Custom" ? (
+				{!["Custom", "Stat"].includes(selectedWheel) ? (
 					<div>
 						<input
 							type="checkbox"
@@ -228,7 +227,13 @@ function App() {
 							Include the DLC - Shadow of the Erdtree
 						</label>
 					</div>
-				) : null}
+				) : (
+					<div>
+						<label>
+							&nbsp;
+						</label>
+					</div>
+				)}
 				{/*TODO: make bigger so there is some padding and styling for more proper tracking of clicking*/}
 				<div>
 					<button type="button" onClick={() => setSelectedWheel("Stat")}>
