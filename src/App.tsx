@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
+//import Data type for processing the wheel data
+import type Data from "../types"
+
 //import the json data
 import StatData from "./data/StatBuilds.json";
 import WeaponData from "./data/WeaponBuilds.json";
@@ -25,14 +28,6 @@ const colors = [
 	"#008080",
 	"#3C4143",
 ];
-
-interface Label {
-	label: string;
-}
-
-interface Data {
-	items: Label[];
-}
 
 //localstorage handling of [value, setValue] paired React State Hooks
 const useLocalStorage = (storageKey, fallbackState) => {

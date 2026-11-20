@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type Data from "../types"
 
 //INFO: list of the first 7 non-black ANSI colors
 //see: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
@@ -24,14 +25,6 @@ const colors2 = [
 
 //BUG: There seems to be an issue when you click out of the browser where the button isn't pressable?
 //i'm not sure how to replicate it, but it is consistent whenever i seem to be out of the browser and click something else
-
-interface Label {
-	label: string;
-}
-
-interface Data {
-	items: Label[];
-}
 
 function Wheel({ data }: Data) {
 	//TODO: fix spacing so that it takes as much space as the wheel
