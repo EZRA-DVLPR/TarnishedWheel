@@ -14,10 +14,6 @@ import Header from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
 import Wheel from "./components/Wheel.tsx";
 
-//TODO: make the wheel myself. it fuckin lags??? are we serious??? in the big 26???
-//methinks an SVG that just gets rotated, similar to the obsidian plugin.
-import { SpinWheel } from "spin-wheel-game";
-
 //INFO: list of the first 7 non-black ANSI colors
 //see: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
 const colors = [
@@ -29,12 +25,6 @@ const colors = [
 	"#008080",
 	"#3C4143",
 ];
-
-//Type Alias for definition of Slice (text and color for a single slice of a wheel)
-type Slice = {
-	segmentText: string;
-	segColor: string;
-};
 
 interface Label {
 	label: string;
@@ -62,7 +52,6 @@ const useLocalStorage = (storageKey, fallbackState) => {
 function App() {
 	//modWheel is the wheel that gets displayed on screen after selection from the user
 	//the data inside will be rewritten, so it is initialized to an empty slice []
-	let modWheel: Slice[] = [];
 	let myWheel: Data = { items: [] };
 
 	//INFO: these hooks matter in persistent sessions
@@ -101,86 +90,45 @@ function App() {
 	};
 
 	//populates the given wheel with the given json data
-	function fillWheel(wheel, data) {
-		data.items.forEach((item, index) => {
+	function DLCCheck(wheelData, data) {
+		data.items.forEach((item) => {
 			if (
 				item.DLC == null || //if no mention of DLC then DLC does not need to be true, then display
 				item.DLC === "False" || //if DLC is mentioned and set to 'False', then display
 				(item.DLC === "True" && valDLC) //if DLC is mentioned and set to 'True', valDLC must also be true to be displayed
 			) {
-				wheel.push({
-					segmentText: item.label,
-					segColor: colors[index % 7],
-				});
+				wheelData.items.push(item);
 			}
 		});
 	}
 
-	//when you make a selection for the desired wheel,
-	//populate the displayed wheel with the chosen data
-	function fillSelectedWheel(selectedWheel, selWheel) {
-		switch (selectedWheel) {
-			case "Stat": {
-				fillWheel(selWheel, StatData);
-				break;
-			}
-			case "Concept": {
-				fillWheel(selWheel, ConceptData);
-				break;
-			}
-			case "Weapon": {
-				fillWheel(selWheel, WeaponData);
-				break;
-			}
-			case "Theme": {
-				fillWheel(selWheel, ThemeData);
-				break;
-			}
-			case "Custom": {
-				//INFO:we want to re-create the syntax of the JSON with the custom data
-				//"items": [
-				//{"label": userWheelData[0]},
-				//{"label": userWheelData[1]},
-				//...
-				//]
-				fillWheel(selWheel, {
-					items: userWheelData.map((value) => ({ label: value })),
-				});
-				break;
-			}
-			default: {
-				console.log("Error on selecting wheel - Undefined wheel caught");
-				console.log(selectedWheel);
-				break;
-			}
-		}
-	}
-
+	//selects the data to be input into the wheel by either checking DLC, or sanitizing it for further use
 	function fillSelectedData(selectedWheel, selData) {
 		switch (selectedWheel) {
 			case "Stat": {
-				selData.items = StatData.items;
+				DLCCheck(selData, StatData);
 				break;
 			}
 			case "Concept": {
-				selData.items = ConceptData.items;
+				DLCCheck(selData, ConceptData);
 				break;
 			}
 			case "Weapon": {
-				selData.items = WeaponData.items;
+				DLCCheck(selData, WeaponData);
 				break;
 			}
 			case "Theme": {
-				selData.items = ThemeData.items;
+				DLCCheck(selData, ThemeData);
 				break;
 			}
 			case "Custom": {
 				//INFO:we want to re-create the syntax of the JSON with the custom data
-				//"items": [
+				//[
 				//{"label": userWheelData[0]},
 				//{"label": userWheelData[1]},
 				//...
 				//]
+				//no need to check dlc for user entries
 				selData.items = userWheelData.map((value) => ({ label: value }));
 				break;
 			}
@@ -192,104 +140,19 @@ function App() {
 		}
 	}
 
-	//the wheel that will be modified and displayed
-	const selWheel: Slice[] = [];
-
-	//reflect changes to selectedWheel
-	const displaySelectedWheel = fillSelectedWheel(selectedWheel, selWheel);
-
+	//the data for the wheel that will be modified and displayed
 	const selData: Data = { items: [] };
 
+	//reflect changes to selectedWheel
 	const displaySelectedData = fillSelectedData(selectedWheel, selData);
 
-	//displays the wheel and checkbox based on the given wheel data
-	function SliceList({ segments }: { segments: Slice[] }) {
-		//holds record of display state for the given slice[]
-		const [checked, setChecked] = useState<Record<string, boolean>>(() =>
-			Object.fromEntries(segments.map((s) => [s.segmentText, true])),
-		);
-
-		//flips bool for the given segmentText
-		const toggle = (name: string) => {
-			setChecked((prev) => ({ ...prev, [name]: !prev[name] }));
-		};
-		//BUG: when toggling, it doesn't update the color to be displayed with the slice
-		//this color choice should be recreated upon toggle
-
-		//toggles all true
-		const selectAll = () => {
-			setChecked(
-				Object.fromEntries(segments.map((s) => [s.segmentText, true])),
-			);
-		};
-
-		//toggles all false
-		const selectNone = () => {
-			setChecked({});
-		};
-
-		//update modWheel to match always those that are checked
-		modWheel = segments.filter((s) => checked[s.segmentText]);
-
-		return (
-			<>
-				<SpinWheel
-					segments={modWheel}
-					onFinished={(result) => console.log(`Spun to: ${result}`)}
-					arrowLocation={"top"}
-				/>
-				<div id="wheelbox-buttons">
-					<button type="button" onClick={selectAll}>
-						Select All
-					</button>
-					<button type="button" onClick={selectNone}>
-						Clear All
-					</button>
-				</div>
-				{selectedWheel === "Custom" ? (
-					<div>
-						<input
-							type="checkbox"
-							id="deletionMode"
-							checked={deletionMode}
-							onChange={(e) => setDeletionMode(e.target.checked)}
-						/>
-						<label htmlFor="deletionMode">Deletion Mode</label>
-					</div>
-				) : null}
-				<div id="wheelbox">
-					{segments.map((slice, index) => (
-						<label key={slice.segmentText} id="wheelbox-item">
-							<input
-								type="checkbox"
-								checked={!!checked[slice.segmentText]}
-								onChange={() => toggle(slice.segmentText)}
-							/>
-							{slice.segmentText}
-							{/*INFO: Only display the delete button when the custom wheel is selected*/}
-							{selectedWheel === "Custom" && deletionMode ? (
-								<button
-									id="wheelbox-delete"
-									type="button"
-									onClick={() => removeAt(index)}
-								>
-									x
-								</button>
-							) : null}
-						</label>
-					))}
-				</div>
-			</>
-		);
-	}
-
-	//takes the given data and sanitizes it for display
+	//takes the given data and displays it in the wheel
+	//adds wheel related functions like checkbox, clear/select all, etc.
 	function DrawWheel({ data }: Data) {
 		//holds record of display state for the given slice[]
 		const [checked, setChecked] = useState<Record<string, boolean>>(() =>
 			Object.fromEntries(data.items.map((item) => [item.label, true])),
 		);
-		//BUG: DLC stuff not working
 
 		//flips bool for the given segmentText
 		const toggle = (name: string) => {
@@ -311,6 +174,8 @@ function App() {
 		//update myWheel to match always those that are checked
 		myWheel = data.items.filter((item) => checked[item.label]);
 
+		//TODO: handle the checkbox better. maybe balance the amount of entries that are in each colmn so its more balanced
+		//BUG: Handle really long names as the winner
 		return (
 			<>
 				<Wheel data={myWheel} />

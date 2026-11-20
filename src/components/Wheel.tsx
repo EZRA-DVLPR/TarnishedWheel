@@ -34,6 +34,11 @@ interface Data {
 }
 
 function Wheel({ data }: Data) {
+	//TODO: fix spacing so that it takes as much space as the wheel
+	//circle saying the wheel needs at least two entries:
+	//currently: {
+	//	list them
+	//}
 	if (data.length < 2) return (<div><h1>Need at least 2 entries for the wheel</h1></div>);
 	//length of arc that the slice will cover in degrees
 	const sliceAngleLength = 360 / data.length;
