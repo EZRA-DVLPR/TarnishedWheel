@@ -1,5 +1,10 @@
 import { useState } from "react";
 
+import StatData from "../data/StatBuilds.json";
+import WeaponData from "../data/WeaponBuilds.json";
+import ThemeData from "../data/ThemeBuilds.json";
+import ConceptData from "../data/ConceptBuilds.json";
+
 //INFO: list of the first 7 non-black ANSI colors
 //see: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
 const colors = [
@@ -22,29 +27,21 @@ const colors2 = [
 	"#00CCCC",
 ];
 
-// TODO: import the wheel data instead of this for testing
-const SEGMENTS = [
-	"Prize A",
-	"Prize B",
-	"Prize C",
-	"Prize D",
-	"Prize E",
-	"Prize F",
-	"Prize A",
-	"Prize B",
-	"Prize C",
-	"Prize D",
-	"Prize E",
-	"Prize F",
-];
-
 //BUG: There seems to be an issue when you click out of the browser where the button isn't pressable?
 //i'm not sure how to replicate it, but it is consistent whenever i seem to be out of the browser and click something else
 
-//length of arc that the slice will cover in degrees
-const sliceAngleLength = 360 / SEGMENTS.length;
+interface Label {
+	label: string;
+}
 
-function Wheel() {
+interface Data {
+	items: Label[];
+}
+
+function Wheel({ data }: Data) {
+	//length of arc that the slice will cover in degrees
+	const sliceAngleLength = 360 / data.items.length;
+
 	const [rotation, setRotation] = useState(0);
 	const [spinning, setSpinning] = useState(false);
 
@@ -54,7 +51,7 @@ function Wheel() {
 		const normalized = (360 - (rotation % 360) + sliceAngleLength / 2) % 360;
 
 		//return whatever angle is within the pointed arc
-		return Math.floor(normalized / sliceAngleLength) % SEGMENTS.length;
+		return Math.floor(normalized / sliceAngleLength) % data.items.length;
 	})();
 
 	//spins the svg
@@ -79,7 +76,9 @@ function Wheel() {
 			const eased = 1 - (1 - progress) ** 3;
 			setRotation(start + (target - start) * eased);
 			if (progress < 1) requestAnimationFrame(animate);
-			else setSpinning(false);
+			else {
+				setSpinning(false);
+			}
 		};
 		requestAnimationFrame(animate);
 	};
@@ -93,7 +92,7 @@ function Wheel() {
 			{spinning ? (
 				<h1>&nbsp;</h1>
 			) : (
-				<h1 id="wheel-winner">{SEGMENTS[winner]}</h1>
+				<h1 id="wheel-winner">{data.items[winner].label}</h1>
 			)}
 
 			{/* static pointer at top */}
@@ -111,7 +110,7 @@ function Wheel() {
 				style={{ transform: `rotate(${rotation}deg)` }}
 			>
 				<title>Wheel</title>
-				{SEGMENTS.map((label, i) => {
+				{data.items.map((item, index) => {
 					//simplifies calcs
 					const r = size / 2;
 
@@ -119,8 +118,9 @@ function Wheel() {
 					const cx = r;
 					const cy = r;
 
-					const startAngle = (i * sliceAngleLength - 90) * (Math.PI / 180);
-					const endAngle = ((i + 1) * sliceAngleLength - 90) * (Math.PI / 180);
+					const startAngle = (index * sliceAngleLength - 90) * (Math.PI / 180);
+					const endAngle =
+						((index + 1) * sliceAngleLength - 90) * (Math.PI / 180);
 
 					//(x1,y1) is the point where the line segment meets the start of the arc
 					const x1 = cx + r * Math.cos(startAngle);
@@ -146,16 +146,16 @@ function Wheel() {
 					// once the drawing is finished, we add the color
 					// followed by the text
 					return (
-						<g key={label}>
+						<g key={item.label}>
 							<path
 								d={`M ${cx} ${cy}
 								L ${x1},${y1}
 								A ${r} ${r} 0 0 1 ${x2},${y2} 
 								Z`}
-								//fill={colors[i % colors.length]}
-								fill={colors2[i % colors.length]}
+								//fill={colors[index % colors.length]}
+								fill={colors2[index % colors.length]}
 								//TODO: needs to be between colors2 and below fill
-								//fill={`hsl(${(i * 360) / SEGMENTS.length}, 70%, 60%)`} //fill={colors2[i % colors.length]}
+								//fill={`hsl(${(index * 360) / data.items.length}, 70%, 60%)`} //fill={colors2[i % colors.length]}
 							/>
 							<text
 								x={lx}
@@ -167,7 +167,9 @@ function Wheel() {
 								fontWeight="bold"
 								transform={`rotate(${mid * (180 / Math.PI) + 180}, ${lx}, ${ly})`}
 							>
-								{label}
+								{item.label.length > 9
+									? `${item.label.slice(0, 9)}...`
+									: item.label}
 							</text>
 						</g>
 					);

@@ -241,7 +241,7 @@ function App() {
 			<Header />
 
 			<section id="center">
-				<Wheel />
+				<Wheel data={StatData} />
 
 				{/*TODO: I am curious on the UI/UX, since it shifts the stuff down. Fiddle with empty space so that it doesn't move the rest of the data vertically*/}
 				{selectedWheel !== "Custom" ? (
@@ -329,8 +329,6 @@ function App() {
 						</button>
 					</div>
 				) : null}
-
-				<SliceList key={selectedWheel} segments={selWheel} />
 			</section>
 
 			<Footer />
