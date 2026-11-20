@@ -12,14 +12,24 @@
   }
 }
 
+/*TODO: Need to handle mobile sizing*/
 #wheel {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	height: auto;
-	width: 1000px;
+	height: 750px;
+	width: 875px;
 	position: relative;
+}
+
+#no-wheel {
+	height: 750px;
+	width: 875px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	letter-spacing: 4px;
 }
 
 #wheel-pointer {
@@ -29,7 +39,7 @@
 }
 
 #wheel-svg {
-	/* sic seben */
+	/* INFO: sic seben */
 	width: 67%;
 	height: auto;
 	display: block;
@@ -55,6 +65,7 @@
 	transition: transform .2s;
 }
 
+/*TODO: have to fix scaling and translation based on the above sizing*/
 #wheel-button:hover {
 	transform: scale(1.1) translate(-45%, 29%);
 }

@@ -28,13 +28,22 @@ const colors2 = [
 //BUG: There seems to be an issue when you click out of the browser where the button isn't pressable?
 //i'm not sure how to replicate it, but it is consistent whenever i seem to be out of the browser and click something else
 
+//BUG: Handle really long names as the winner
+//
 function Wheel({ data }: Data) {
 	//TODO: fix spacing so that it takes as much space as the wheel
 	//circle saying the wheel needs at least two entries:
 	//currently: {
 	//	list them
 	//}
-	if (data.length < 2) return (<div><h1>Need at least 2 entries for the wheel</h1></div>);
+	if (data.length < 2) return (
+		<div id="no-wheel">
+			<h1>
+				Need at least 2 entries for the wheel
+			</h1>
+		</div>
+	);
+
 	//length of arc that the slice will cover in degrees
 	const sliceAngleLength = 360 / data.length;
 
@@ -44,7 +53,7 @@ function Wheel({ data }: Data) {
 	//returns the angle of the winning segment (where teh pointer points to)
 	const winner = (() => {
 		//normalize so 0° = pointer at top, rotating clockwise
-		const normalized = (360 - (rotation % 360) + sliceAngleLength / 2) % 360;
+		const normalized = 360 - (rotation % 360);
 
 		//return whatever angle is within the pointed arc
 		return Math.floor(normalized / sliceAngleLength) % data.length;
@@ -103,7 +112,7 @@ function Wheel({ data }: Data) {
 				viewBox={`0 0 ${size} ${size}`}
 				width={300}
 				height={300}
-				style={{ transform: `rotate(${rotation}deg)` }}
+				style={{ transform: `rotate(${rotation % 360}deg)` }}
 			>
 				<title>Wheel</title>
 				{data.map((item, index) => {
