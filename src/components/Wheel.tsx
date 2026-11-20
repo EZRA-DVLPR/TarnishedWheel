@@ -1,4 +1,6 @@
 import { useState } from "react";
+
+//import Data type for processing the wheel data
 import type Data from "../types"
 
 //INFO: list of the first 7 non-black ANSI colors

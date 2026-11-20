@@ -1,5 +1,6 @@
 //INFO:keeping just in case i want to import images for later
 //import heroImg from "./assets/hero.png";
+
 import { useState, useEffect } from "react";
 import "./App.css";
 
@@ -17,21 +18,9 @@ import Header from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
 import Wheel from "./components/Wheel.tsx";
 
-//INFO: list of the first 7 non-black ANSI colors
-//see: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
-const colors = [
-	"#800000",
-	"#008000",
-	"#808000",
-	"#000080",
-	"#800080",
-	"#008080",
-	"#3C4143",
-];
-
 //localstorage handling of [value, setValue] paired React State Hooks
 const useLocalStorage = (storageKey, fallbackState) => {
-	//creation of value and setting of value with localstorage
+	//retrieve value from localstorage, and use fallbackState if not found
 	const [value, setValue] = useState(
 		JSON.parse(localStorage.getItem(storageKey)) ?? fallbackState,
 	);
@@ -45,31 +34,27 @@ const useLocalStorage = (storageKey, fallbackState) => {
 };
 
 function App() {
-	//modWheel is the wheel that gets displayed on screen after selection from the user
-	//the data inside will be rewritten, so it is initialized to an empty slice []
+	//mutable object that contains the data for the wheel to use
 	let myWheel: Data = { items: [] };
 
 	//INFO: these hooks matter in persistent sessions
 
-	//DLC check for the wheels to display DLC only content
+	//boolean for DLC -> used for DLC based values
 	const [valDLC, setDLC] = useLocalStorage("valDLC", true);
 
-	//currently selected wheel
+	//currently selected wheel -> changes contents of wheel data
 	const [selectedWheel, setSelectedWheel] = useLocalStorage(
 		"selectedWheel",
 		"Stat",
 	);
 
-	//toggle for showing/hiding the delete buttons on the slices
+	//toggle for showing/hiding the delete buttons on the wheel data
 	const [deletionMode, setDeletionMode] = useLocalStorage("deletionMode", true);
 
-	//custom wheel information
+	//user input stored as [] for wheel information
 	const [userWheelData, setUserWheelData] = useState(() => {
 		return JSON.parse(localStorage.getItem("userWheelData")) || [];
 	});
-
-	//INFO: user input box should not persist across sessions
-	const [inputValue, setInputValue] = useState("");
 
 	//updates localstorage with the new user wheel data
 	const saveUserWheelData = (newArray) => {
@@ -83,8 +68,11 @@ function App() {
 		copy.splice(index, 1);
 		saveUserWheelData(copy);
 	};
+	
+	//INFO: value of user input box should not persist across sessions
+	const [inputValue, setInputValue] = useState("");
 
-	//populates the given wheel with the given json data
+	//checks the data for DLC values and only appends it to wheelData if it passes
 	function DLCCheck(wheelData, data) {
 		data.items.forEach((item) => {
 			if (
@@ -97,11 +85,12 @@ function App() {
 		});
 	}
 
-	//selects the data to be input into the wheel by either checking DLC, or sanitizing it for further use
+	//sanitizes data before sending for usage
 	function fillSelectedData(selectedWheel, selData) {
 		switch (selectedWheel) {
 			case "Stat": {
-				DLCCheck(selData, StatData);
+				//INFO: Stats are independent of DLC
+				selData.items = StatData.items;
 				break;
 			}
 			case "Concept": {
@@ -123,7 +112,7 @@ function App() {
 				//{"label": userWheelData[1]},
 				//...
 				//]
-				//no need to check dlc for user entries
+				//users cannot enter DLC-dependent data
 				selData.items = userWheelData.map((value) => ({ label: value }));
 				break;
 			}
@@ -144,12 +133,12 @@ function App() {
 	//takes the given data and displays it in the wheel
 	//adds wheel related functions like checkbox, clear/select all, etc.
 	function DrawWheel({ data }: Data) {
-		//holds record of display state for the given slice[]
+		//pair of label of item and visibility for each item in data
 		const [checked, setChecked] = useState<Record<string, boolean>>(() =>
 			Object.fromEntries(data.items.map((item) => [item.label, true])),
 		);
 
-		//flips bool for the given segmentText
+		//flips bool for the given named string
 		const toggle = (name: string) => {
 			setChecked((prev) => ({ ...prev, [name]: !prev[name] }));
 		};
@@ -166,7 +155,7 @@ function App() {
 			setChecked({});
 		};
 
-		//update myWheel to match always those that are checked
+		//update myWheel to contain only those that are checked (visible)
 		myWheel = data.items.filter((item) => checked[item.label]);
 
 		//TODO: handle the checkbox better. maybe balance the amount of entries that are in each colmn so its more balanced
@@ -226,7 +215,6 @@ function App() {
 			<Header />
 
 			<section id="center">
-				<DrawWheel key={`${selectedWheel}-2`} data={selData} />
 				{/*TODO: I am curious on the UI/UX, since it shifts the stuff down. Fiddle with empty space so that it doesn't move the rest of the data vertically*/}
 				{selectedWheel !== "Custom" ? (
 					<div>
@@ -241,6 +229,7 @@ function App() {
 						</label>
 					</div>
 				) : null}
+				{/*TODO: make bigger so there is some padding and styling for more proper tracking of clicking*/}
 				<div>
 					<button type="button" onClick={() => setSelectedWheel("Stat")}>
 						Stat
@@ -313,6 +302,7 @@ function App() {
 						</button>
 					</div>
 				) : null}{" "}
+				<DrawWheel key={`${selectedWheel}-2`} data={selData} />
 			</section>
 
 			<Footer />
