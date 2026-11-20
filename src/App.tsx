@@ -36,6 +36,14 @@ type Slice = {
 	segColor: string;
 };
 
+interface Label {
+	label: string;
+}
+
+interface Data {
+	items: Label[];
+}
+
 //localstorage handling of [value, setValue] paired React State Hooks
 const useLocalStorage = (storageKey, fallbackState) => {
 	//creation of value and setting of value with localstorage
@@ -55,6 +63,7 @@ function App() {
 	//modWheel is the wheel that gets displayed on screen after selection from the user
 	//the data inside will be rewritten, so it is initialized to an empty slice []
 	let modWheel: Slice[] = [];
+	let myWheel: Data = { items: [] };
 
 	//INFO: these hooks matter in persistent sessions
 
@@ -147,11 +156,51 @@ function App() {
 		}
 	}
 
+	function fillSelectedData(selectedWheel, selData) {
+		switch (selectedWheel) {
+			case "Stat": {
+				selData.items = StatData.items;
+				break;
+			}
+			case "Concept": {
+				selData.items = ConceptData.items;
+				break;
+			}
+			case "Weapon": {
+				selData.items = WeaponData.items;
+				break;
+			}
+			case "Theme": {
+				selData.items = ThemeData.items;
+				break;
+			}
+			case "Custom": {
+				//INFO:we want to re-create the syntax of the JSON with the custom data
+				//"items": [
+				//{"label": userWheelData[0]},
+				//{"label": userWheelData[1]},
+				//...
+				//]
+				selData.items = userWheelData.map((value) => ({ label: value }));
+				break;
+			}
+			default: {
+				console.log("Error on selecting wheel - Undefined wheel caught");
+				console.log(selectedWheel);
+				break;
+			}
+		}
+	}
+
 	//the wheel that will be modified and displayed
 	const selWheel: Slice[] = [];
 
 	//reflect changes to selectedWheel
 	const displaySelectedWheel = fillSelectedWheel(selectedWheel, selWheel);
+
+	const selData: Data = { items: [] };
+
+	const displaySelectedData = fillSelectedData(selectedWheel, selData);
 
 	//displays the wheel and checkbox based on the given wheel data
 	function SliceList({ segments }: { segments: Slice[] }) {
@@ -234,6 +283,82 @@ function App() {
 		);
 	}
 
+	//takes the given data and sanitizes it for display
+	function DrawWheel({ data }: Data) {
+		//holds record of display state for the given slice[]
+		const [checked, setChecked] = useState<Record<string, boolean>>(() =>
+			Object.fromEntries(data.items.map((item) => [item.label, true])),
+		);
+		//BUG: DLC stuff not working
+
+		//flips bool for the given segmentText
+		const toggle = (name: string) => {
+			setChecked((prev) => ({ ...prev, [name]: !prev[name] }));
+		};
+
+		//toggles all true
+		const selectAll = () => {
+			setChecked(
+				Object.fromEntries(data.items.map((item) => [item.label, true])),
+			);
+		};
+
+		//toggles all false
+		const selectNone = () => {
+			setChecked({});
+		};
+
+		//update myWheel to match always those that are checked
+		myWheel = data.items.filter((item) => checked[item.label]);
+
+		return (
+			<>
+				<Wheel data={myWheel} />
+				<div id="wheelbox-buttons">
+					<button type="button" onClick={selectAll}>
+						Select All
+					</button>
+					<button type="button" onClick={selectNone}>
+						Clear All
+					</button>
+				</div>
+				{selectedWheel === "Custom" ? (
+					<div>
+						<input
+							type="checkbox"
+							id="deletionMode"
+							checked={deletionMode}
+							onChange={(e) => setDeletionMode(e.target.checked)}
+						/>
+						<label htmlFor="deletionMode">Deletion Mode</label>
+					</div>
+				) : null}
+				<div id="wheelbox">
+					{data.items.map((item, index) => (
+						<label key={item.label} id="wheelbox-item">
+							<input
+								type="checkbox"
+								checked={!!checked[item.label]}
+								onChange={() => toggle(item.label)}
+							/>
+							{item.label}
+							{/*INFO: Only display the delete button when the custom wheel is selected*/}
+							{selectedWheel === "Custom" && deletionMode ? (
+								<button
+									id="wheelbox-delete"
+									type="button"
+									onClick={() => removeAt(index)}
+								>
+									x
+								</button>
+							) : null}
+						</label>
+					))}
+				</div>
+			</>
+		);
+	}
+
 	return (
 		<>
 			<section id="spacer" />
@@ -241,8 +366,7 @@ function App() {
 			<Header />
 
 			<section id="center">
-				<Wheel data={StatData} />
-
+				<DrawWheel key={`${selectedWheel}-2`} data={selData} />
 				{/*TODO: I am curious on the UI/UX, since it shifts the stuff down. Fiddle with empty space so that it doesn't move the rest of the data vertically*/}
 				{selectedWheel !== "Custom" ? (
 					<div>
@@ -328,7 +452,7 @@ function App() {
 							Add Custom Wheel Slice
 						</button>
 					</div>
-				) : null}
+				) : null}{" "}
 			</section>
 
 			<Footer />

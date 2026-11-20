@@ -1,10 +1,5 @@
 import { useState } from "react";
 
-import StatData from "../data/StatBuilds.json";
-import WeaponData from "../data/WeaponBuilds.json";
-import ThemeData from "../data/ThemeBuilds.json";
-import ConceptData from "../data/ConceptBuilds.json";
-
 //INFO: list of the first 7 non-black ANSI colors
 //see: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
 const colors = [
@@ -39,8 +34,9 @@ interface Data {
 }
 
 function Wheel({ data }: Data) {
+	if (data.length < 2) return;
 	//length of arc that the slice will cover in degrees
-	const sliceAngleLength = 360 / data.items.length;
+	const sliceAngleLength = 360 / data.length;
 
 	const [rotation, setRotation] = useState(0);
 	const [spinning, setSpinning] = useState(false);
@@ -51,7 +47,7 @@ function Wheel({ data }: Data) {
 		const normalized = (360 - (rotation % 360) + sliceAngleLength / 2) % 360;
 
 		//return whatever angle is within the pointed arc
-		return Math.floor(normalized / sliceAngleLength) % data.items.length;
+		return Math.floor(normalized / sliceAngleLength) % data.length;
 	})();
 
 	//spins the svg
@@ -92,7 +88,7 @@ function Wheel({ data }: Data) {
 			{spinning ? (
 				<h1>&nbsp;</h1>
 			) : (
-				<h1 id="wheel-winner">{data.items[winner].label}</h1>
+				<h1 id="wheel-winner">{data[winner].label}</h1>
 			)}
 
 			{/* static pointer at top */}
@@ -110,7 +106,7 @@ function Wheel({ data }: Data) {
 				style={{ transform: `rotate(${rotation}deg)` }}
 			>
 				<title>Wheel</title>
-				{data.items.map((item, index) => {
+				{data.map((item, index) => {
 					//simplifies calcs
 					const r = size / 2;
 
@@ -155,7 +151,7 @@ function Wheel({ data }: Data) {
 								//fill={colors[index % colors.length]}
 								fill={colors2[index % colors.length]}
 								//TODO: needs to be between colors2 and below fill
-								//fill={`hsl(${(index * 360) / data.items.length}, 70%, 60%)`} //fill={colors2[i % colors.length]}
+								//fill={`hsl(${(index * 360) / data.length}, 70%, 60%)`} //fill={colors2[i % colors.length]}
 							/>
 							<text
 								x={lx}
